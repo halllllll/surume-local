@@ -1,0 +1,26 @@
+import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { Box, IconButton } from "@chakra-ui/react";
+import { type FC } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+export const BrowserBack: FC = () => {
+  const location = useLocation();
+  if (location.pathname === "/") return null;
+  const navigate = useNavigate();
+
+  return (
+    <Box>
+      <IconButton
+        size={"md"}
+        variant={"ghost"}
+        icon={
+          <>
+            <ChevronLeftIcon />
+          </>
+        }
+        aria-label={"browser back"}
+        onClick={() => navigate(-1)}
+      />
+    </Box>
+  );
+};
