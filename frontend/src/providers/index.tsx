@@ -9,13 +9,13 @@ import { ReactRouterProvider } from "./routeProvider";
 export const Providers: FC = () => {
   return (
     <SurumeProvider>
+          <MsalClientProvider>
       <ChakraProvider theme={theme}>
         <QueryProvider>
-          <MsalClientProvider>
             <ReactRouterProvider />
-          </MsalClientProvider>
         </QueryProvider>
       </ChakraProvider>
+          </MsalClientProvider>
     </SurumeProvider>
   );
 };
