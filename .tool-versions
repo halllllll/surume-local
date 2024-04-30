@@ -1,3 +1,4 @@
 bun 1.0.26
 nodejs 21.6.0
 golang 1.22.1
+zig 0.11.0

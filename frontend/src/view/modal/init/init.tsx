@@ -3,7 +3,7 @@ import { useState, type FC } from "react";
 import {
   Controller,
   FormProvider,
-  SubmitHandler,
+  type SubmitHandler,
   useForm,
 } from "react-hook-form";
 import {
@@ -33,10 +33,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { InitSchema, InitSchemaType } from "./schema";
-import { CheckBoxType } from "./type";
+import { InitSchema, type InitSchemaType } from "./schema";
+import type { CheckBoxType } from "./type";
 import { useInit } from "@/service/init";
-import { InitTargetsRequest } from "@/service/init/type";
+import type { InitTargetsRequest } from "@/service/init/type";
 
 // Form いい感じのアーキテクチャができないのでいっそまとめる（あとで分割するいい方法が思いついたときに混乱しないように）
 
@@ -91,7 +91,7 @@ export const InitForm: FC<{ onClose: () => void }> = ({ onClose }) => {
       },
       onError: (error) => {
         toast({
-          title: "失敗しました",
+          title: "Avaritia",
           description: `${error.name} - ${error.message}`,
           status: "error",
           isClosable: true,

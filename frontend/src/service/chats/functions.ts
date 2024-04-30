@@ -1,5 +1,6 @@
+import { useMsal } from "@azure/msal-react";
 import { getAccessToken, prepareClient } from "../graphClient";
-import { ChatsAPIResponse } from "./type";
+import type { ChatsAPIResponse } from "./type";
 
 export const getChats = async (nextLink: string): Promise<ChatsAPIResponse> => {
 	if (nextLink.slice(nextLink.indexOf("?$skiptoken"), -1) === "") {
@@ -18,7 +19,8 @@ export const getChats = async (nextLink: string): Promise<ChatsAPIResponse> => {
 	}
 	// skiptokenのパラメータをopenapi-fetchでは扱えなかった
 	// 生のfetchでやることにする
-	const at = await getAccessToken();
+	const { instance } = useMsal();
+	const { accessToken: at } = await getAccessToken(instance);
 	const res = await fetch(nextLink, {
 		headers: {
 			Authorization: `Bearer ${at}`,

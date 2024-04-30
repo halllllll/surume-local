@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import type { FC } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SurumeProvider } from "@/context/hook";
 import { QueryProvider } from "./queryProvider";

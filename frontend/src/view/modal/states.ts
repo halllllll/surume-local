@@ -1,1 +1,1 @@
-export type ModalType = "EntraId_Info" | "Delete" | null;
+export type ModalType = 'EntraId_Info' | 'Delete' | 'UploadFolderID' | null;

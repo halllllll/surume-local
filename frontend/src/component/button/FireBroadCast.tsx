@@ -1,18 +1,14 @@
-import { useSurumeContext } from "@/context/hook";
-import { FormatedChatMessageData } from "@/types/types";
-import { Button, Center } from "@chakra-ui/react";
-import { type FC } from "react";
+import { useSurumeContext } from '@/context/hook';
+import type { FormatedChatMessageData } from '@/types/types';
+import { Button, Center } from '@chakra-ui/react';
+import type { FC } from 'react';
 
 type Prop = {
   scrollTo: () => void;
   sendHandler: (data: FormatedChatMessageData[]) => void;
   isLoading: boolean;
 };
-export const FireBroadCast: FC<Prop> = ({
-  scrollTo,
-  sendHandler,
-  isLoading,
-}) => {
+export const FireBroadCast: FC<Prop> = ({ scrollTo, sendHandler, isLoading }) => {
   const { surumeCtx } = useSurumeContext();
   const messages = surumeCtx.chat_messages;
   if (messages.length === 0) return null;
@@ -23,12 +19,7 @@ export const FireBroadCast: FC<Prop> = ({
   };
   return (
     <Center>
-      <Button
-        colorScheme="teal"
-        size={"lg"}
-        onClick={handlers}
-        isLoading={isLoading}
-      >
+      <Button colorScheme="teal" size={'lg'} onClick={handlers} isLoading={isLoading}>
         🔥FIRE🔥
       </Button>
     </Center>

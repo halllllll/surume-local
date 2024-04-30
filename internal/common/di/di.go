@@ -10,15 +10,6 @@ import (
 	"github.com/halllllll/surume-local/internal/service"
 )
 
-func InitCount(db *sql.DB, logger *slog.Logger) controller.CountControler {
-	tx := repository.NewTransaction(db)
-
-	r := repository.NewCountRepository(db, logger)
-	s := service.NewCountSerivce(r, tx, logger)
-
-	return controller.NewCountController(s, logger)
-}
-
 func InitEntraId(db *sql.DB) controller.EntraIdControllerer {
 	// tx := repository.NewTransaction(db)
 

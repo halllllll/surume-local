@@ -1,7 +1,7 @@
 import { BrowserBack } from "@/component/button/BrowserBack";
 import { AuthenticatedTemplate, useMsal } from "@azure/msal-react";
 import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
-import { type FC } from "react";
+import type { FC } from "react";
 
 export const Greet: FC = () => {
   const { accounts } = useMsal();

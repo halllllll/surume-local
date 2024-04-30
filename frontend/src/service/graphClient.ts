@@ -1,8 +1,13 @@
-import { paths } from "@/types/oas";
-import { InteractionRequiredAuthError } from "@azure/msal-browser";
-import createClient, { Middleware } from "openapi-fetch";
+import type { paths } from "@/types/oas";
+import {
+	type AccountInfo,
+	BrowserAuthError,
+	InteractionRequiredAuthError,
+} from "@azure/msal-browser";
+import createClient, { type Middleware } from "openapi-fetch";
 import { getEntraIdInfo } from "./entraid_info_api/functions";
-import { AuthProperties, createMsalClient } from "@/providers/msalProvider";
+import type { IPublicClientApplication } from "@azure/msal-browser";
+import { useMsal } from "@azure/msal-react";
 
 export const AppRequests = {
 	scopes: [
@@ -15,18 +20,25 @@ export const AppRequests = {
 	],
 };
 
-export const getAccessToken = async () => {
+export const getAccessToken = async (
+	instance: IPublicClientApplication,
+): Promise<{
+	accessToken: string;
+	accountInfo: AccountInfo;
+}> => {
 	const data = await getEntraIdInfo();
 	if (!(data.success && data.exist)) throw new Error("no auth data");
-	const auth: AuthProperties = {
-		auth: {
-			clientId: data.data.clientid,
-			authority: `https://login.microsoftonline.com/${data.data.authority}`,
-			redirectUri: data.data.port.toString(),
-		},
-	};
-	const instance = createMsalClient(auth);
-	await instance.initialize();
+	// instanceは使い回す
+	// const auth: AuthProperties = {
+	//   auth: {
+	//     clientId: data.data.clientid,
+	//     authority: `https://login.microsoftonline.com/${data.data.authority}`,
+	//     redirectUri: data.data.port.toString(),
+	//   },
+	// };
+	// const instance = createMsalClient(auth);
+	// await instance.initialize();
+	// const { instance } = useMsal();
 	const accounts = instance.getAllAccounts();
 	// await Promise.resolve(); // https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5796#issuecomment-1763461620
 	try {
@@ -34,11 +46,17 @@ export const getAccessToken = async () => {
 			...AppRequests,
 			account: accounts[0],
 		});
-		return silentReq.accessToken;
+		return { accessToken: silentReq.accessToken, accountInfo: accounts[0] };
 	} catch (err: unknown) {
-		// InteractionRequiredAuthError エラーの場合、再度リダイレクトで認証させる
+		// InteractionRequiredAuthError / BrowserAuthError エラーの場合、再度リダイレクトで認証させる
 		if (err instanceof InteractionRequiredAuthError) {
-			return instance.acquireTokenRedirect(AppRequests);
+			console.info("redirect...");
+			// return instance.acquireTokenRedirect(AppRequests);
+			await instance.acquireTokenRedirect(AppRequests);
+		} else if (err instanceof BrowserAuthError) {
+			console.info("redirect...");
+			// return instance.acquireTokenRedirect(AppRequests);
+			await instance.acquireTokenRedirect(AppRequests);
 		}
 		throw err;
 	}
@@ -46,7 +64,8 @@ export const getAccessToken = async () => {
 
 const authMiddleware: Middleware = {
 	async onRequest(req) {
-		const at = await getAccessToken();
+		const { instance } = useMsal();
+		const { accessToken: at } = await getAccessToken(instance);
 		req.headers.set("Authorization", `Bearer ${at}`);
 		return req;
 	},

@@ -11,7 +11,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { type FC } from "react";
+import type { FC } from "react";
 import parse from "html-react-parser";
 
 type Prop = {

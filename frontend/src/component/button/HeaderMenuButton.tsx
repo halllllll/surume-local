@@ -1,11 +1,12 @@
-import { type FC } from "react";
+import type { FC } from 'react';
 import {
   InfoOutlineIcon,
+  PlusSquareIcon,
   SettingsIcon,
   ChatIcon,
   HamburgerIcon,
   WarningIcon,
-} from "@chakra-ui/icons";
+} from '@chakra-ui/icons';
 import {
   IconButton,
   Menu,
@@ -14,13 +15,10 @@ import {
   MenuGroup,
   MenuItem,
   MenuList,
-} from "@chakra-ui/react";
-import { ModalType } from "@/view/modal/states";
-import {
-  AuthenticatedTemplate,
-  UnauthenticatedTemplate,
-} from "@azure/msal-react";
-import { LogoutMenuItem } from "./LogoutButton";
+} from '@chakra-ui/react';
+import type { ModalType } from '@/view/modal/states';
+import { AuthenticatedTemplate } from '@azure/msal-react';
+import { LogoutMenuItem } from './LogoutButton';
 
 type HeaderMenuProps = {
   onDrawerOpen: () => void;
@@ -38,24 +36,30 @@ const HeaderMenu: FC<HeaderMenuProps> = (props) => {
         variant="outline"
       />
       <MenuList>
-        <MenuGroup title="Basic">
+        <MenuGroup title="System">
+          <MenuItem
+            icon={<SettingsIcon />}
+            onClick={() => {
+              props.setModal('EntraId_Info');
+            }}
+          >
+            Setup Entra ID Info
+          </MenuItem>
           <AuthenticatedTemplate>
-            <LogoutMenuItem />
+            <MenuItem
+              icon={<PlusSquareIcon />}
+              onClick={() => {
+                props.setModal('UploadFolderID');
+              }}
+            >
+              Upload Folder
+            </MenuItem>
+
             <MenuItem icon={<ChatIcon />} onClick={props.onDrawerOpen}>
               History
             </MenuItem>
           </AuthenticatedTemplate>
-          <UnauthenticatedTemplate>
-            <MenuItem
-              icon={<SettingsIcon />}
-              onClick={() => {
-                props.setModal("EntraId_Info");
-              }}
-            >
-              Setup Entra ID Info
-            </MenuItem>
-          </UnauthenticatedTemplate>
-          <MenuItem as={"a"} href="/" icon={<InfoOutlineIcon />}>
+          <MenuItem as={'a'} href="/" icon={<InfoOutlineIcon />}>
             Document
           </MenuItem>
         </MenuGroup>
@@ -64,11 +68,12 @@ const HeaderMenu: FC<HeaderMenuProps> = (props) => {
           <MenuItem
             icon={<WarningIcon />}
             onClick={() => {
-              props.setModal("Delete");
+              props.setModal('Delete');
             }}
           >
             RESET DATA
           </MenuItem>
+          <LogoutMenuItem />
         </MenuGroup>
       </MenuList>
     </Menu>

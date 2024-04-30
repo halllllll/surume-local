@@ -25,6 +25,15 @@ CREATE TABLE IF NOT EXISTS user (
 	user_id TEXT PRIMARY KEY NOT NULL UNIQUE
 );
 
+-- folder id (in ms world called "driveitem")
+CREATE TABLE IF NOT EXISTS folder_id (
+	account_id TEXT NOT NULL,
+	folder_id TEXT NOT NULL UNIQUE,
+	folder_name TEXT NOT NULL,
+	site_id TEXT NOT NULL,
+	FOREIGN KEY(account_id) REFERENCES user(user_id)
+);
+
 -- fireのみ履歴
 CREATE TABLE IF NOT EXISTS fire_history (
 	account_id TEXT REFERENCES user(user_id) ON UPDATE CASCADE,

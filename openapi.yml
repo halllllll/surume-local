@@ -131,7 +131,7 @@ components:
     system_mode:
       type: string
       enum:
-        - mentenace
+        - mentenance
         - goon
     version_info:
       type: object

@@ -4,7 +4,7 @@ import {
   ModalContent,
   ModalHeader,
 } from "@chakra-ui/react";
-import { type FC } from "react";
+import type { FC } from "react";
 
 import { InitForm } from "./init";
 

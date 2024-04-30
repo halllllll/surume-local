@@ -8,7 +8,7 @@ import { ErrorFallback } from "@/errors/ErrorFallback";
 import { LoginRoot } from "@/view/LoginRoot";
 import { ServerError } from "@azure/msal-browser";
 import { useLoaderData } from "react-router-dom";
-import { GetEntraIdInfoResponse } from "@/service/entraid_info_api/type";
+import type { GetEntraIdInfoResponse } from "@/service/entraid_info_api/type";
 import { Center, Text } from "@chakra-ui/react";
 import { Reload } from "@/component/button/Reload";
 import { useSurumeContext } from "@/context/hook";

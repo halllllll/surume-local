@@ -1,8 +1,8 @@
 import { useSurumeContext } from "@/context/hook";
 import { Stack, Input, Button, useToast } from "@chakra-ui/react";
-import { type FC } from "react";
+import type { FC } from "react";
 import { useTemplateValidate } from "@/service/fileupload";
-import { FormatedChatMessageData } from "@/types/types";
+import type { FormatedChatMessageData } from "@/types/types";
 
 export const UploadXlsxFile: FC = () => {
   const { mutate: uploadFileMutate, isPending: disabled } =
@@ -20,8 +20,8 @@ export const UploadXlsxFile: FC = () => {
         onSuccess: (result) => {
           if (!result.success) {
             toast({
-              title: "NOT SUCCESS",
-              description: `${result.error}`,
+              title: "Ira",
+              description: `NOT SUCCESS - ${result.error}`,
               status: "error",
             });
             return;
@@ -41,7 +41,7 @@ export const UploadXlsxFile: FC = () => {
         onError: (err) => {
           setSurumeCtx({ type: "ResetChatsMessages" }); // 無いほうがいいかも？
           toast({
-            title: "失敗しました",
+            title: "Superbia",
             description: `${err.name} - ${err.message}`,
             status: "error",
             isClosable: true,

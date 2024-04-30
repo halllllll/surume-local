@@ -1,5 +1,5 @@
-import { Box, Button, Center } from "@chakra-ui/react";
-import { type FC } from "react";
+import { Box, Button, Center } from '@chakra-ui/react';
+import type { FC } from 'react';
 
 type Props = {
   handler: () => void;

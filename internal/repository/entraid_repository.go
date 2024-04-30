@@ -3,15 +3,20 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 
 	"github.com/halllllll/surume-local/internal/models"
 )
 
 type EntraIder interface {
 	Count() (int, error)
-	Get(context.Context) (*models.EntraIdApp, error)
-	Set(context.Context, *models.EntraIdApp) error
-	Update(context.Context, *models.EntraIdApp) error
+	GetEntraIdInfo(context.Context) (*models.EntraIdApp, error)
+	SetEntraIdInfo(context.Context, *models.EntraIdApp) error
+	UpdateEntraIdInfo(context.Context, *models.EntraIdApp) error
+
+	SetAccountID(context.Context, *models.AccountID) error
+	GetAccountID(context.Context, *models.AccountID) (*models.User, error)
 }
 
 type entraIdRepository struct {
@@ -34,7 +39,7 @@ func (er *entraIdRepository) Count() (int, error) {
 	return count, nil
 }
 
-func (er *entraIdRepository) Get(ctx context.Context) (*models.EntraIdApp, error) {
+func (er *entraIdRepository) GetEntraIdInfo(ctx context.Context) (*models.EntraIdApp, error) {
 	var data models.EntraIdApp
 	tx, err := er.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -54,7 +59,7 @@ func (er *entraIdRepository) Get(ctx context.Context) (*models.EntraIdApp, error
 	return &data, nil
 }
 
-func (er *entraIdRepository) Set(ctx context.Context, data *models.EntraIdApp) error {
+func (er *entraIdRepository) SetEntraIdInfo(ctx context.Context, data *models.EntraIdApp) error {
 	stmt := `
 		INSERT INTO entraid_info (client_id, authority, localhost_port) VALUES (?, ?, ?)
 	`
@@ -65,7 +70,7 @@ func (er *entraIdRepository) Set(ctx context.Context, data *models.EntraIdApp) e
 	return nil
 }
 
-func (er *entraIdRepository) Update(ctx context.Context, data *models.EntraIdApp) error {
+func (er *entraIdRepository) UpdateEntraIdInfo(ctx context.Context, data *models.EntraIdApp) error {
 	stmt := `
 		UPDATE entraid_info SET client_id = ?, authority = ?, localhost_port = ?
 	`
@@ -74,5 +79,38 @@ func (er *entraIdRepository) Update(ctx context.Context, data *models.EntraIdApp
 		return err
 	}
 	return nil
+}
 
+func (er *entraIdRepository) GetAccountID(ctx context.Context, id *models.AccountID) (*models.User, error) {
+	var user models.User
+	tx, err := er.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	stmt := `
+		SELECT user_id FROM user WHERE user_id = ?
+	`
+	if err := tx.QueryRowContext(ctx, stmt, id).Scan(&user); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	fmt.Println("やったね！")
+	return &user, nil
+}
+
+func (er *entraIdRepository) SetAccountID(ctx context.Context, id *models.AccountID) error {
+
+	stmt := `
+		INSERT INTO user (user_id) VALUES (?)
+		ON CONFLICT (user_id)
+		DO NOTHING
+	`
+	_, err := er.db.ExecContext(ctx, stmt, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

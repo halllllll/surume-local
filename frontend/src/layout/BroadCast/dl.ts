@@ -1,4 +1,4 @@
-import { FormatedChatMessageData } from "@/types/types";
+import type { FormatedChatMessageData } from "@/types/types";
 import saveAs from "file-saver";
 import Excel from "exceljs";
 

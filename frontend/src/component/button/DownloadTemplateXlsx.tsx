@@ -1,6 +1,6 @@
-import { Center, Link } from "@chakra-ui/react";
-import { type FC } from "react";
-import { BaseCard2 } from "../card/Base";
+import { Center, Link } from '@chakra-ui/react';
+import type { FC } from 'react';
+import { BaseCard2 } from '../card/Base';
 
 export const DownloadTemplateXlsxButton: FC = () => {
   return (

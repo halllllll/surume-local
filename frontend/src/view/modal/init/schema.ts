@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { initDBTargets } from "./type";
-import { InferType } from "yup";
+import type { InferType } from "yup";
 
 // https://qiita.com/ksh-fthr/items/e465097596c47f58ffa0
 const T = initDBTargets.reduce(

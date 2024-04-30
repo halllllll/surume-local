@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log/slog"
 
@@ -54,7 +55,7 @@ func (cr *counterRepository) FindById(ctx context.Context, id models.CountId) (*
 		SELECT * FROM count WHERE count_id = ?
 	`
 	if err := tx.QueryRowContext(ctx, stmt, id).Scan(&count.Id, &count.Val, &count.Created, &count.Updated); err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, fmt.Errorf("data not found")
 		} else {
 			return nil, err

@@ -1,3 +1,3 @@
 export const uploadFileKeys = {
-	template: ["template"] as const,
+  template: ['template'] as const,
 } as const;

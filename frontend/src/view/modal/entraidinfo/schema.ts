@@ -1,6 +1,7 @@
+import type { PostEntraIdInfoRequest } from "@/service/entraid_info_api/type";
 import * as yup from "yup";
 
-const schema = yup.object().shape({
+const schema: yup.ObjectSchema<PostEntraIdInfoRequest> = yup.object().shape({
 	clientid: yup
 		.string()
 		.trim()

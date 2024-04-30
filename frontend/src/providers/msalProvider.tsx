@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 import {
   BrowserCacheLocation,
@@ -66,6 +66,12 @@ export const MsalClientProvider: FC<{ children: ReactNode }> = ({
       redirectUri: surumeCtx.redirect_uri_localhost_port,
     },
   });
-
+  // ここでリダイレクトを飛ばすと無限ループになってしまう
+  // if (msalClient.getAllAccounts().length === 0) {
+  //   // TODO: いい感じにリダイレクトしたいがReactRouterProviderの外なのでどうしよう
+  //   console.info("you need to login");
+  //   // window.location.replace(window.location.origin);
+  //   return <Home />;
+  // }
   return <MsalProvider instance={msalClient}>{children}</MsalProvider>;
 };

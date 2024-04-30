@@ -5,9 +5,10 @@ import { Box, useDisclosure } from "@chakra-ui/react";
 import DrawerRoot from "@/layout/DrawerRoot";
 import HeaderMenu from "@/component/button/HeaderMenuButton";
 import { EntraIdModal } from "@/view/modal/entraidinfo/modal";
-import { ModalType } from "@/view/modal/states";
+import type { ModalType } from "@/view/modal/states";
 import { InitModal } from "@/view/modal/init/modal";
 import { Greet } from "./Greet";
+import { FolderIdModal } from "@/view/modal/targetfolder/modal";
 
 export const BaseLayout: FC = () => {
   const {
@@ -48,11 +49,31 @@ export const BaseLayout: FC = () => {
               onClose={onModalClose}
             />
           )}
+          {targetModal === "UploadFolderID" && (
+            <FolderIdModal
+              initialRef={initialRef}
+              isOpen={isModalOpen}
+              onClose={onModalClose}
+            />
+          )}
         </>
       )}
       {isDrawerOpen && (
         <DrawerRoot isOpen={isDrawerOpen} onClose={onDrowerClose} />
       )}
+      {/* <AuthenticatedTemplate>
+        <Greet />
+        <Box mx={10} pb={20}>
+          <Outlet />
+        </Box>
+      </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <Navigate to="/" />
+        <Center>
+          <Text>set entra id info</Text>
+          <Reload />
+        </Center>
+      </UnauthenticatedTemplate> */}
       <Greet />
       <Box mx={10} pb={20}>
         <Outlet />

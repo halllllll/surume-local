@@ -17,7 +17,6 @@ func healthHandler(c *gin.Context) {
 
 func SetRoutes(r *gin.Engine, db *sql.DB, logger *slog.Logger) {
 
-	countCtrl := di.InitCount(db, logger)
 	r.MaxMultipartMemory = 15 << 20 // 15 MiB
 	api := r.Group("/api")
 
@@ -28,11 +27,9 @@ func SetRoutes(r *gin.Engine, db *sql.DB, logger *slog.Logger) {
 	{
 		api.GET("/entraid", entraIdCtrl.GetInfo)
 		api.POST("/system/entraid", entraIdCtrl.Setup)
+		api.POST("/system/user", entraIdCtrl.SetAccountInfo)
 		api.DELETE("/system/reset", delete.Reset)
 
-		api.POST("/count", countCtrl.AddCount)
-		api.GET("/count/:id", countCtrl.GetCount)
-		api.GET("/count", countCtrl.GetCounts)
 		api.POST("/util/validateTemplate", utilsCtrl.ValidateTemplate)
 	}
 

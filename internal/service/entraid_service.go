@@ -12,14 +12,17 @@ import (
 type Result string
 
 var (
-	Update Result = "UPDATE"
-	Create Result = "CREATE"
+	Update  Result = "UPDATE"
+	Create  Result = "CREATE"
+	Already Result = "EXIST"
 )
 
 type EntraIdServicer interface {
 	DataExist() (bool, error)
 	SetData(context.Context, *models.EntraIdApp) (Result, error)
 	GetSingleRecordData(context.Context) (bool, *models.EntraIdApp, error)
+	SetAccount(context.Context, *models.User) (Result, error)
+	DeleteAccount(context.Context, *models.User) error
 	// Reset(context.Context, []string) error
 }
 
@@ -54,7 +57,7 @@ func (es *entraidService) GetSingleRecordData(ctx context.Context) (bool, *model
 	if count > 1 {
 		return true, nil, fmt.Errorf("invalid database status (expected single record, but %d)", count)
 	}
-	info, err := es.repo.Get(ctx)
+	info, err := es.repo.GetEntraIdInfo(ctx)
 	if err != nil {
 		return false, nil, err
 	}
@@ -72,13 +75,13 @@ func (es *entraidService) SetData(ctx context.Context, data *models.EntraIdApp) 
 		// 更新
 		result = Update
 		err = es.tx.DoTx(ctx, func(ctx context.Context) error {
-			return es.repo.Update(ctx, data)
+			return es.repo.UpdateEntraIdInfo(ctx, data)
 		})
 	} else {
 		// 新規追加
 		result = Create
 		err = es.tx.DoTx(ctx, func(ctx context.Context) error {
-			return es.repo.Set(ctx, data)
+			return es.repo.SetEntraIdInfo(ctx, data)
 		})
 	}
 
@@ -86,4 +89,31 @@ func (es *entraidService) SetData(ctx context.Context, data *models.EntraIdApp) 
 		return "", err
 	}
 	return result, nil
+}
+
+func (es *entraidService) SetAccount(ctx context.Context, data *models.User) (Result, error) {
+	if data.AccountID == "" {
+		return "", fmt.Errorf("received empty data")
+	}
+	// TODO: any other id validation?
+
+	// is already exist
+	u, err := es.repo.GetAccountID(ctx, &data.AccountID)
+	if err != nil {
+		if u == nil {
+			return Already, nil
+		}
+		return "", err
+	}
+
+	// any other validation brabrabra....
+
+	// do set
+	return "", es.repo.SetAccountID(ctx, &data.AccountID)
+}
+
+func (es *entraidService) DeleteAccount(ctx context.Context, data *models.User) error {
+
+	// TODO: GOGOGOGOGOO
+	return nil
 }

@@ -26,7 +26,7 @@ build_win: frontend_build
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w -X main.AppMode=prod" -trimpath -o $(current_dir)/bin/win/surume-local.exe $(current_dir)/main.go
 
 build_linux: frontend_build
-	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X main.AppMode=prod" -trimpath -o $(current_dir)/bin/linux/surume-local $(current_dir)/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=1 CC="zig cc -target x86_64-linux" CXX="zig c++ -target x86_64-linux" go build -ldflags="-s -w -X main.AppMode=prod" -trimpath -o $(current_dir)/bin/linux/surume-local $(current_dir)/main.go
 
 # bun, oas_graphは自前でやりなさい
 dev: port_check

@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import type { FC } from "react";
 import { LoginButton } from "@/component/button/LoginButton";
 import { Flex, Heading } from "@chakra-ui/react";
 

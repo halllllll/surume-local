@@ -1,6 +1,6 @@
-import { FormatedChatMessageData } from "@/types/types";
+import type { FormatedChatMessageData } from "@/types/types";
 import { Box, Flex, VStack, Spacer, Text } from "@chakra-ui/react";
-import { type FC } from "react";
+import type { FC } from "react";
 
 type Props = {
   data: FormatedChatMessageData[];

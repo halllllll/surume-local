@@ -4,7 +4,7 @@ import { useRef, type FC } from "react";
 import { ChatMessages } from "@/view/BroadCast/ChatMessages";
 import { FireBroadCast } from "@/component/button/FireBroadCast";
 import { usePostChatsMessageWithContext } from "@/service/message";
-import { FormatedChatMessageData } from "@/types/types";
+import type { FormatedChatMessageData } from "@/types/types";
 import { DownloadResult } from "@/component/button/DownloadResult";
 import { useSurumeContext } from "@/context/hook";
 import { download } from "./dl";

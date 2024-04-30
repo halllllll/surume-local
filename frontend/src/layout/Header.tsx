@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Spacer } from "@chakra-ui/react";
-import { ReactNode, type FC } from "react";
+import type { ReactNode, FC } from "react";
 import { ColorSwitchButton } from "@/component/button/ColorSwitch";
 import { Link } from "react-router-dom";
 
