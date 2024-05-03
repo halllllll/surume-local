@@ -6,6 +6,8 @@ import { ChatList } from "@/layout/ChatList";
 import { Fire } from "@/layout/BroadCast/Fire";
 import { Post } from "@/layout/Post/Post";
 import { ServerError } from "@azure/msal-browser";
+import { useIsAuthenticated } from "@azure/msal-react";
+import type { FC, ReactNode } from "react";
 
 function ErrorBoundary() {
 	const e = useRouteError();
@@ -16,6 +18,13 @@ function ErrorBoundary() {
 	const err = e as Error;
 	return <div>{`error: ${err.name} - ${err.message}`}</div>;
 }
+
+const EntraAuth: FC<{ children: ReactNode }> = ({ children }) => {
+	const isAuthenticated = useIsAuthenticated();
+	if (!isAuthenticated) return <Navigate replace to="/" />;
+
+	return children;
+};
 
 const router = createBrowserRouter([
 	{
@@ -30,15 +39,27 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/chats_list",
-				element: <ChatList />,
+				element: (
+					<EntraAuth>
+						<ChatList />
+					</EntraAuth>
+				),
 			},
 			{
 				path: "/fire",
-				element: <Fire />,
+				element: (
+					<EntraAuth>
+						<Fire />
+					</EntraAuth>
+				),
 			},
 			{
 				path: "/post",
-				element: <Post />,
+				element: (
+					<EntraAuth>
+						<Post />
+					</EntraAuth>
+				),
 			},
 		],
 	},

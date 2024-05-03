@@ -7,15 +7,15 @@ import { MsalClientProvider } from "./msalProvider";
 import { ReactRouterProvider } from "./routeProvider";
 
 export const Providers: FC = () => {
-  return (
-    <SurumeProvider>
-          <MsalClientProvider>
-      <ChakraProvider theme={theme}>
-        <QueryProvider>
-            <ReactRouterProvider />
-        </QueryProvider>
-      </ChakraProvider>
-          </MsalClientProvider>
-    </SurumeProvider>
-  );
+	return (
+		<SurumeProvider>
+			<MsalClientProvider>
+				<ChakraProvider theme={theme}>
+					<QueryProvider>
+						<ReactRouterProvider />
+					</QueryProvider>
+				</ChakraProvider>
+			</MsalClientProvider>
+		</SurumeProvider>
+	);
 };

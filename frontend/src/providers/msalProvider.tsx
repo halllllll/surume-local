@@ -1,77 +1,78 @@
 import type { FC, ReactNode } from "react";
 
 import {
-  BrowserCacheLocation,
-  LogLevel,
-  PublicClientApplication,
+	BrowserCacheLocation,
+	LogLevel,
+	PublicClientApplication,
 } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 import { useSurumeContext } from "@/context/hook";
 
 export type AuthProperties = {
-  auth: {
-    clientId: string;
-    authority: string;
-    redirectUri: string;
-  };
+	auth: {
+		clientId: string;
+		authority: string;
+		redirectUri: string;
+	};
 };
 
 export const createMsalClient = (auth: AuthProperties) => {
-  const msalClient = new PublicClientApplication({
-    ...auth,
-    cache: {
-      cacheLocation: BrowserCacheLocation.SessionStorage,
-      storeAuthStateInCookie: true,
-    },
-    system: {
-      loggerOptions: {
-        logLevel: LogLevel.Trace,
-        loggerCallback: (level, message, containsPii) => {
-          if (containsPii) {
-            return;
-          }
-          switch (level) {
-            case LogLevel.Error:
-              console.error(message);
-              return;
-            case LogLevel.Info:
-              console.info(message);
-              return;
-            case LogLevel.Verbose:
-              console.debug(message);
-              return;
-            case LogLevel.Warning:
-              console.warn(message);
-              return;
-            default:
-              console.log(message);
-              return;
-          }
-        },
-      },
-    },
-  });
+	const msalClient = new PublicClientApplication({
+		...auth,
+		cache: {
+			cacheLocation: BrowserCacheLocation.SessionStorage,
+			storeAuthStateInCookie: true,
+		},
+		system: {
+			loggerOptions: {
+				logLevel: LogLevel.Trace,
+				loggerCallback: (level, message, containsPii) => {
+					if (containsPii) {
+						return;
+					}
+					switch (level) {
+						case LogLevel.Error:
+							console.error(message);
+							return;
+						case LogLevel.Info:
+							console.info(message);
+							return;
+						case LogLevel.Verbose:
+							console.debug(message);
+							return;
+						case LogLevel.Warning:
+							console.warn(message);
+							return;
+						default:
+							console.log(message);
+							return;
+					}
+				},
+			},
+		},
+	});
 
-  return msalClient;
+	return msalClient;
 };
 
 export const MsalClientProvider: FC<{ children: ReactNode }> = ({
-  children,
+	children,
 }) => {
-  const { surumeCtx } = useSurumeContext();
-  const msalClient = createMsalClient({
-    auth: {
-      clientId: surumeCtx.client_id,
-      authority: `https://login.microsoftonline.com/${surumeCtx.authority}`,
-      redirectUri: surumeCtx.redirect_uri_localhost_port,
-    },
-  });
-  // ここでリダイレクトを飛ばすと無限ループになってしまう
-  // if (msalClient.getAllAccounts().length === 0) {
-  //   // TODO: いい感じにリダイレクトしたいがReactRouterProviderの外なのでどうしよう
-  //   console.info("you need to login");
-  //   // window.location.replace(window.location.origin);
-  //   return <Home />;
-  // }
-  return <MsalProvider instance={msalClient}>{children}</MsalProvider>;
+	const { surumeCtx } = useSurumeContext();
+	const msalClient = createMsalClient({
+		auth: {
+			clientId: surumeCtx.client_id,
+			authority: `https://login.microsoftonline.com/${surumeCtx.authority}`,
+			// redirectUri: surumeCtx.redirect_uri_localhost_port,
+			redirectUri: `http://localhost:${surumeCtx.redirect_uri_localhost_port}/redirect`,
+		},
+	});
+	// ここでリダイレクトを飛ばすと無限ループになってしまう
+	// if (msalClient.getAllAccounts().length === 0) {
+	//   // TODO: いい感じにリダイレクトしたいがReactRouterProviderの外なのでどうしよう
+	//   console.info("you need to login");
+	//   // window.location.replace(window.location.origin);
+	//   return <Home />;
+	// }
+	return <MsalProvider instance={msalClient}>{children}</MsalProvider>;
 };

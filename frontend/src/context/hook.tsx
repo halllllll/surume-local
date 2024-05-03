@@ -1,16 +1,24 @@
-import { type FC, type ReactNode, createContext, useContext, useReducer, useMemo } from 'react';
-import { ContextError } from '@/errors/errors';
-import type { FormatedChatMessageData } from '@/types/types';
-import type { ChatsAPIResponse } from '@/service/chats/type';
+import {
+	type FC,
+	type ReactNode,
+	createContext,
+	useContext,
+	useReducer,
+	useMemo,
+} from "react";
+import { ContextError } from "@/errors/errors";
+import type { FormatedChatMessageData } from "@/types/types";
+import type { ChatsAPIResponse } from "@/service/chats/type";
 
 // context state
 export type SurumeCtx = {
-  client_id: string;
-  authority: string;
-  redirect_uri_localhost_port: string;
-  accessToken: string;
-  chat_messages: FormatedChatMessageData[];
-  chat_list_result: ChatsAPIResponse[];
+	client_id: string;
+	authority: string;
+	redirect_uri_localhost_port: string;
+	redirect_uri_fqdn: string;
+	accessToken: string;
+	chat_messages: FormatedChatMessageData[];
+	chat_list_result: ChatsAPIResponse[];
 } | null;
 
 // context dispatch
@@ -21,108 +29,117 @@ const SetSurumeContext = createContext<SetSurumeCtx>(() => null);
 
 // contxt action
 type ctxAction =
-  | {
-      type: 'SetAccessToken';
-      payload: { accessToken: string };
-    }
-  | {
-      type: 'SetEntraIdInfo';
-      payload: {
-        authority: string;
-        clientid: string;
-        port: number;
-      };
-    }
-  | {
-      type: 'SetChatsMessage';
-      payload: FormatedChatMessageData[];
-    }
-  | {
-      type: 'ResetChatsMessages';
-    }
-  | {
-      type: 'SetBelongingChat';
-      payload: ChatsAPIResponse[];
-    }
-  | {
-      type: 'UpdateSendingChatStatus';
-      payload: {
-        data: FormatedChatMessageData;
-      };
-    };
+	| {
+			type: "SetAccessToken";
+			payload: { accessToken: string };
+	  }
+	| {
+			type: "SetEntraIdInfo";
+			payload: {
+				authority: string;
+				clientid: string;
+				port: number;
+			};
+	  }
+	| {
+			type: "SetChatsMessage";
+			payload: FormatedChatMessageData[];
+	  }
+	| {
+			type: "ResetChatsMessages";
+	  }
+	| {
+			type: "SetBelongingChat";
+			payload: ChatsAPIResponse[];
+	  }
+	| {
+			type: "UpdateSendingChatStatus";
+			payload: {
+				data: FormatedChatMessageData;
+			};
+	  };
 
 // context reducer
-const ctxReducer = (curData: NonNullable<SurumeCtx>, action: ctxAction): NonNullable<SurumeCtx> => {
-  switch (action.type) {
-    case 'SetAccessToken': {
-      return { ...(curData || {}), accessToken: action.payload.accessToken };
-    }
-    case 'SetEntraIdInfo': {
-      return {
-        ...(curData || {}),
-        authority: action.payload.authority,
-        client_id: action.payload.clientid,
-        redirect_uri_localhost_port: action.payload.port.toString(),
-      };
-    }
-    case 'SetChatsMessage': {
-      return {
-        ...curData,
-        chat_messages: action.payload,
-      };
-    }
-    case 'ResetChatsMessages': {
-      return { ...curData, chat_messages: [] };
-    }
-    case 'SetBelongingChat': {
-      return {
-        ...curData,
-        chat_list_result: action.payload,
-      };
-    }
-    case 'UpdateSendingChatStatus': {
-      const lis = curData.chat_messages;
-      lis[action.payload.data.indexOrder] = action.payload.data;
-      return {
-        ...curData,
-        chat_messages: lis,
-      };
-    }
-  }
+const ctxReducer = (
+	curData: NonNullable<SurumeCtx>,
+	action: ctxAction,
+): NonNullable<SurumeCtx> => {
+	switch (action.type) {
+		case "SetAccessToken": {
+			return { ...(curData || {}), accessToken: action.payload.accessToken };
+		}
+		case "SetEntraIdInfo": {
+			return {
+				...(curData || {}),
+				authority: action.payload.authority,
+				client_id: action.payload.clientid,
+				redirect_uri_localhost_port: action.payload.port.toString(),
+				redirect_uri_fqdn: `http://localhost:${action.payload.port.toString()}${
+					import.meta.env.VITE_AZURE_REDIRECT_URI_PATH
+				}`,
+			};
+		}
+		case "SetChatsMessage": {
+			return {
+				...curData,
+				chat_messages: action.payload,
+			};
+		}
+		case "ResetChatsMessages": {
+			return { ...curData, chat_messages: [] };
+		}
+		case "SetBelongingChat": {
+			return {
+				...curData,
+				chat_list_result: action.payload,
+			};
+		}
+		case "UpdateSendingChatStatus": {
+			const lis = curData.chat_messages;
+			lis[action.payload.data.indexOrder] = action.payload.data;
+			return {
+				...curData,
+				chat_messages: lis,
+			};
+		}
+	}
 };
 
 export const SurumeProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const initial: NonNullable<SurumeCtx> = {
-    accessToken: '',
-    authority: '',
-    client_id: '',
-    redirect_uri_localhost_port: '',
-    chat_messages: [],
-    chat_list_result: [],
-  };
-  const [surumeState, surumeDispatch] = useReducer(ctxReducer, initial);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  const surume = useMemo(() => {
-    return { surumeState, surumeDispatch };
-  }, [surumeState, surumeDispatch]);
-  return (
-    <SurumeContext.Provider value={surume.surumeState}>
-      <SetSurumeContext.Provider value={surume.surumeDispatch}>
-        {children}
-      </SetSurumeContext.Provider>
-    </SurumeContext.Provider>
-  );
+	const initial: NonNullable<SurumeCtx> = {
+		accessToken: "",
+		authority: "",
+		client_id: "",
+		redirect_uri_localhost_port: "",
+		redirect_uri_fqdn: "",
+		chat_messages: [],
+		chat_list_result: [],
+	};
+	const [surumeState, surumeDispatch] = useReducer(ctxReducer, initial);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	const surume = useMemo(() => {
+		return { surumeState, surumeDispatch };
+	}, [surumeState, surumeDispatch]);
+	return (
+		<SurumeContext.Provider value={surume.surumeState}>
+			<SetSurumeContext.Provider value={surume.surumeDispatch}>
+				{children}
+			</SetSurumeContext.Provider>
+		</SurumeContext.Provider>
+	);
 };
 
 export const useSurumeContext = (): {
-  surumeCtx: NonNullable<SurumeCtx>;
-  setSurumeCtx: React.Dispatch<ctxAction>;
+	surumeCtx: NonNullable<SurumeCtx>;
+	setSurumeCtx: React.Dispatch<ctxAction>;
 } => {
-  const surumeCtx = useContext(SurumeContext);
-  if (surumeCtx === null) {
-    throw new ContextError('surume context must be used within a SurumeProvider');
-  }
+	const surumeCtx = useContext(SurumeContext);
+	if (surumeCtx === null) {
+		throw new ContextError(
+			"surume context must be used within a SurumeProvider",
+		);
+	}
 
-  const setSurumeCtx = useContext(SetSurumeContext);
-  return { surumeCtx, setSurumeCtx };
+	const setSurumeCtx = useContext(SetSurumeContext);
+	return { surumeCtx, setSurumeCtx };
 };
