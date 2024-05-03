@@ -11,73 +11,60 @@ import { Greet } from "./Greet";
 import { FolderIdModal } from "@/view/modal/targetfolder/modal";
 
 export const BaseLayout: FC = () => {
-  const {
-    isOpen: isDrawerOpen,
-    onOpen: onDrowerOpen,
-    onClose: onDrowerClose,
-  } = useDisclosure();
-  const {
-    isOpen: isModalOpen,
-    onOpen: onModalOpen,
-    onClose: onModalClose,
-  } = useDisclosure();
-  const [targetModal, setTargetModal] = useState<ModalType>(null);
-  const setModal = (t: ModalType) => {
-    setTargetModal(t);
-    onModalOpen();
-  };
-  const initialRef = useRef(null);
+	const {
+		isOpen: isDrawerOpen,
+		onOpen: onDrowerOpen,
+		onClose: onDrowerClose,
+	} = useDisclosure();
+	const {
+		isOpen: isModalOpen,
+		onOpen: onModalOpen,
+		onClose: onModalClose,
+	} = useDisclosure();
+	const [targetModal, setTargetModal] = useState<ModalType>(null);
+	const setModal = (t: ModalType) => {
+		setTargetModal(t);
+		onModalOpen();
+	};
+	const initialRef = useRef(null);
 
-  return (
-    <Box>
-      <Header>
-        <HeaderMenu onDrawerOpen={onDrowerOpen} setModal={setModal} />
-      </Header>
-      {isModalOpen && (
-        <>
-          {targetModal === "EntraId_Info" && (
-            <EntraIdModal
-              initialRef={initialRef}
-              isOpen={isModalOpen}
-              onClose={onModalClose}
-            />
-          )}
-          {targetModal === "Delete" && (
-            <InitModal
-              initialRef={initialRef}
-              isOpen={isModalOpen}
-              onClose={onModalClose}
-            />
-          )}
-          {targetModal === "UploadFolderID" && (
-            <FolderIdModal
-              initialRef={initialRef}
-              isOpen={isModalOpen}
-              onClose={onModalClose}
-            />
-          )}
-        </>
-      )}
-      {isDrawerOpen && (
-        <DrawerRoot isOpen={isDrawerOpen} onClose={onDrowerClose} />
-      )}
-      {/* <AuthenticatedTemplate>
-        <Greet />
-        <Box mx={10} pb={20}>
-          <Outlet />
-        </Box>
-      </AuthenticatedTemplate>
-      <UnauthenticatedTemplate>
-        <Navigate to="/" />
-        <Center>
-          <Text>set entra id info</Text>
-          <Reload />
-        </Center>
-      </UnauthenticatedTemplate> */}
-      <Greet />
-      <Box mx={10} pb={20}>
-        <Outlet />
-      </Box>
-    </Box>
-  );
+	return (
+		<Box>
+			<Header>
+				<HeaderMenu onDrawerOpen={onDrowerOpen} setModal={setModal} />
+			</Header>
+			{isModalOpen && (
+				<>
+					{targetModal === "EntraId_Info" && (
+						<EntraIdModal
+							initialRef={initialRef}
+							isOpen={isModalOpen}
+							onClose={onModalClose}
+						/>
+					)}
+					{targetModal === "Delete" && (
+						<InitModal
+							initialRef={initialRef}
+							isOpen={isModalOpen}
+							onClose={onModalClose}
+						/>
+					)}
+					{targetModal === "UploadFolderID" && (
+						<FolderIdModal
+							initialRef={initialRef}
+							isOpen={isModalOpen}
+							onClose={onModalClose}
+						/>
+					)}
+				</>
+			)}
+			{isDrawerOpen && (
+				<DrawerRoot isOpen={isDrawerOpen} onClose={onDrowerClose} />
+			)}
+			<Greet />
+			<Box mx={10} pb={20}>
+				<Outlet />
+			</Box>
+		</Box>
+	);
 };

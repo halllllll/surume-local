@@ -1,4 +1,4 @@
-import { useSurumeContext } from "@/context/hook";
+import { useSurumeContext } from "@/hooks/context";
 import { useAzureAuthLogin } from "@/hooks/entraid";
 import { InteractionStatus } from "@azure/msal-browser";
 import { Button } from "@chakra-ui/react";

@@ -12,7 +12,7 @@ import { useLoaderData } from "react-router-dom";
 import type { GetEntraIdInfoResponse } from "@/service/entraid_info_api/type";
 import { Center, Text } from "@chakra-ui/react";
 import { Reload } from "@/component/button/Reload";
-import { useSurumeContext } from "@/context/hook";
+import { useSurumeContext } from "@/hooks/context";
 import { ManageRoot } from "@/view/ManageRoot";
 
 export const Home: FC = () => {
@@ -54,13 +54,6 @@ export const Home: FC = () => {
 					<LoginRoot />
 				</ErrorBoundary>
 			</UnauthenticatedTemplate>
-			{/* <MsalAuthenticationTemplate
-				interactionType={InteractionType.Popup}
-				authenticationRequest={AppRequests}
-			>
-				<ManageRoot />
-			</MsalAuthenticationTemplate>
-      */}
 		</ErrorBoundary>
 	);
 };
