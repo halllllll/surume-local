@@ -28,17 +28,6 @@ export const getAccessToken = async (
 }> => {
 	const data = await getEntraIdInfo();
 	if (!(data.success && data.exist)) throw new Error("no auth data");
-	// instanceは使い回す
-	// const auth: AuthProperties = {
-	//   auth: {
-	//     clientId: data.data.clientid,
-	//     authority: `https://login.microsoftonline.com/${data.data.authority}`,
-	//     redirectUri: data.data.port.toString(),
-	//   },
-	// };
-	// const instance = createMsalClient(auth);
-	// await instance.initialize();
-	// const { instance } = useMsal();
 	const accounts = instance.getAllAccounts();
 	// await Promise.resolve(); // https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/5796#issuecomment-1763461620
 	try {
@@ -72,6 +61,7 @@ const authMiddleware: Middleware = {
 };
 
 // MS Graph APIのレスポンスエラーをハンドリングしにくいのでフェッチコードでやることにした
+
 // const throwOnError: Middleware = {
 // 	async onResponse(res) {
 // 		if (res.status >= 400) {
@@ -89,6 +79,15 @@ export const prepareClient = () => {
 		baseUrl: "https://graph.microsoft.com/v1.0",
 	});
 	client.use(authMiddleware);
+	// client.use(throwOnError);
+	return client;
+};
+
+export const prepareClientWithBearer = (token: string) => {
+	const client = createClient<paths>({
+		baseUrl: "https://graph.microsoft.com/v1.0",
+		headers: { Authorization: `Bearer ${token}` },
+	});
 	// client.use(throwOnError);
 	return client;
 };

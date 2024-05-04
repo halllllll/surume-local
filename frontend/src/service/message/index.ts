@@ -31,31 +31,40 @@ export const usePostChatMessageText = () => {
 export const usePostChatsMessageWithContext = () => {
 	const queryClient = useQueryClient();
 	const { setSurumeCtx } = useSurumeContext();
+
 	const { mutate, isPending, status, failureReason, failureCount } =
-		useMutation<ChatMessage, GraphError, FormatedChatMessageData>({
+		useMutation<
+			ChatMessage,
+			GraphError,
+			{
+				data: FormatedChatMessageData;
+				token: string;
+				index: number;
+			}
+		>({
 			mutationFn: postChatMessageTextWithContext,
 			networkMode: "online", // default
-			// mutationKey: messageKeys.shot(curChatId),
+			// mutationKey: messageKeys.shot(chatid),
 			onMutate: async (variables) => {
-				variables.status = "Sending";
+				variables.data.status = "Sending";
 				setSurumeCtx({
 					type: "UpdateSendingChatStatus",
-					payload: { data: variables },
+					payload: { data: variables.data },
 				});
 			},
 			onSuccess: (_data, variables) => {
 				queryClient.invalidateQueries({ queryKey: messageKeys.all });
-				variables.status = "Success";
+				variables.data.status = "Success";
 				setSurumeCtx({
 					type: "UpdateSendingChatStatus",
-					payload: { data: variables },
+					payload: { data: variables.data },
 				});
 			},
 			onError: (_error, variables) => {
-				variables.status = "Failed";
+				variables.data.status = "Failed";
 				setSurumeCtx({
 					type: "UpdateSendingChatStatus",
-					payload: { data: variables },
+					payload: { data: variables.data },
 				});
 			},
 			retry: (failureCount, error) => {

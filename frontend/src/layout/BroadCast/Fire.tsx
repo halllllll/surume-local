@@ -9,6 +9,8 @@ import { DownloadResult } from "@/component/button/DownloadResult";
 import { useSurumeContext } from "@/hooks/context";
 import { download } from "./dl";
 import { FireCount } from "./Count";
+import { useMsal } from "@azure/msal-react";
+import { getAccessToken } from "@/service/graphClient";
 
 export const Fire: FC = () => {
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -18,13 +20,14 @@ export const Fire: FC = () => {
 	const { mutate: postChatMessages } = usePostChatsMessageWithContext();
 	const { surumeCtx } = useSurumeContext();
 	const data = surumeCtx.chat_messages;
-
 	const toast = useToast();
-	const post = (data: FormatedChatMessageData[]) => {
-		// biome-ignore lint/complexity/noForEach: <explanation>
-		data.forEach((ele) => {
+	const { instance } = useMsal();
+
+	const post = async (data: FormatedChatMessageData[]) => {
+		const { accessToken } = await getAccessToken(instance);
+		data.forEach((ele, idx) => {
 			postChatMessages(
-				{ ...ele },
+				{ data: ele, token: accessToken, index: idx },
 				{
 					// なぜか何度も呼ばれる
 					//   toast({
@@ -41,13 +44,15 @@ export const Fire: FC = () => {
 					//     duration: 5000,
 					//   });
 					// },
-					// onError: (err) => {
-					//   toast({
-					//     title: "Error",
-					//     description: `${err.name} - ${err.message}`,
-					//     duration: 8000,
-					//   });
-					// },
+					onError: (err) => {
+						console.error("?????????");
+						console.error(err);
+						toast({
+							title: "Error",
+							description: `${err.name} - ${err.message}`,
+							duration: 8000,
+						});
+					},
 				},
 			);
 		});
