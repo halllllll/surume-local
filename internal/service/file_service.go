@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"slices"
+	"strings"
 
 	"github.com/halllllll/surume-local/internal/common/dto"
 	"github.com/halllllll/surume-local/internal/repository"
@@ -52,6 +53,7 @@ func (fs *fileServicer) CheckTemplate(ctx context.Context, req http.Request) ([]
 
 	// TODO: ハードコーディングするよりstatic serverからテンプレートを取得して比較したほうがいい気がする
 	sheets := excel.GetSheetList()
+	// correct sheet name
 	if !slices.Contains(sheets, dto.TemplateXlsxSheetName) {
 		return nil, fmt.Errorf("invalid sheet name")
 	}
@@ -59,14 +61,16 @@ func (fs *fileServicer) CheckTemplate(ctx context.Context, req http.Request) ([]
 	if err != nil {
 		return nil, err
 	}
+	// empty
 	if len(rows) == 1 {
 		return nil, fmt.Errorf("no data")
 	}
 
-	// 上限
+	// upto
 	if len(rows)-1 > dto.MaximumRowCount {
 		return nil, fmt.Errorf("Over Maximum Count: %d", dto.MaximumRowCount)
 	}
+
 	// TODO: 必要なデータに整形して返す
 	res := make([]dto.ChatMessage, len(rows)-1)
 
@@ -76,7 +80,7 @@ func (fs *fileServicer) CheckTemplate(ctx context.Context, req http.Request) ([]
 			if j == 0 {
 				chat.Name = cell
 			} else if j == 1 {
-				chat.ChatId = cell
+				chat.ChatId = strings.TrimSpace(cell)
 			} else if j == 2 {
 				chat.Content = cell
 			}
