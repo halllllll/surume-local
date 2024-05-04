@@ -1,4 +1,4 @@
-bun 1.0.26
-nodejs 21.6.0
-golang 1.22.1
+bun 1.1.7
+nodejs 22.0.0
+golang 1.22.2
 zig 0.11.0

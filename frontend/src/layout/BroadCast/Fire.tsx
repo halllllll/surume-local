@@ -76,7 +76,7 @@ export const Fire: FC = () => {
 			<HStack spacing={10}>
 				<UploadXlsxFile />
 				{/* TODO: 未実装 */}
-				<Button isDisabled={true}>{"From Log"}</Button>
+				<Button isDisabled={true}>{"From Log (Under Construction)"}</Button>
 			</HStack>
 
 			{data.length === 0 ? null : (

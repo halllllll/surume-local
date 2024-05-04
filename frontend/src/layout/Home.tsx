@@ -1,7 +1,6 @@
 import { type FC, useEffect } from "react";
 import {
 	AuthenticatedTemplate,
-	MsalAuthenticationTemplate,
 	UnauthenticatedTemplate,
 } from "@azure/msal-react";
 import { ErrorBoundary } from "react-error-boundary";
