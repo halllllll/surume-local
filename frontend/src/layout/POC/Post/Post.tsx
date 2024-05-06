@@ -9,7 +9,6 @@ import {
 	FormErrorMessage,
 	FormLabel,
 	Heading,
-	Highlight,
 	Input,
 	InputGroup,
 	InputRightElement,
@@ -26,11 +25,9 @@ import type { ChatMessageData } from "@/types/types";
 import { UploadFiles } from "@/component/button/UploadFiles";
 import {
 	useCreateFolder,
-	useGetDriveItemByNameBeneathRoot,
+	// useGetDriveItemByNameBeneathRoot,
 } from "@/service/drive";
-import { getAccessToken } from "@/service/graphClient";
 import { SelectedFileField } from "@/view/SelectedFileField";
-import { useMsal } from "@azure/msal-react";
 
 // 機能テスト用の画面
 // 面倒なのでyupとかは使わない
@@ -40,6 +37,7 @@ type Props = {
 	updateLoadingStatus: (v: boolean) => void;
 };
 const StatusExistFolder: FC<Props> = ({ target, updateLoadingStatus }) => {
+	/*
 	const {
 		data: _data,
 		isPending,
@@ -75,6 +73,7 @@ const StatusExistFolder: FC<Props> = ({ target, updateLoadingStatus }) => {
 			</Box>
 		);
 	}
+	*/
 
 	return (
 		<Box>
@@ -170,17 +169,15 @@ export const Post: FC = () => {
 			return;
 		}
 		if (files.length > 0 && formData.attachement?.dist) {
+			/*
 			// アップロード先を作成
 			const uploadFolderName = `surume-${format(
 				new Date(),
 				"yyyy-MM-dd_HHmmss",
 			)}`;
-			const { instance } = useMsal();
-			const { accountInfo: account } = await getAccessToken(instance);
 			createFolder(
 				{
-					userId: account.localAccountId,
-					parentFolderId: formData.attachement.dist,
+					parentFolderId: tar
 					folderName: uploadFolderName,
 				},
 				{
@@ -202,6 +199,7 @@ export const Post: FC = () => {
 					},
 				},
 			);
+			*/
 		}
 
 		// if file attachement

@@ -4,10 +4,11 @@ import { Home } from "@/layout/Home";
 import { getEntraIdInfo } from "@/service/entraid_info_api/functions";
 import { ChatList } from "@/layout/ChatList";
 import { Fire } from "@/layout/BroadCast/Fire";
-import { Post } from "@/layout/Post/Post";
+import { Post } from "@/layout/POC/Post/Post";
 import { ServerError } from "@azure/msal-browser";
 import { useIsAuthenticated } from "@azure/msal-react";
 import type { FC, ReactNode } from "react";
+import { CheckingFolder } from "@/layout/POC/ExitFolder/CheckingFolder";
 
 function ErrorBoundary() {
 	const e = useRouteError();
@@ -58,6 +59,14 @@ const router = createBrowserRouter([
 				element: (
 					<EntraAuth>
 						<Post />
+					</EntraAuth>
+				),
+			},
+			{
+				path: "/isexistfolder",
+				element: (
+					<EntraAuth>
+						<CheckingFolder />
 					</EntraAuth>
 				),
 			},

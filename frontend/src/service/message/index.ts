@@ -45,7 +45,7 @@ export const usePostChatsMessageWithContext = () => {
 			mutationFn: postChatMessageTextWithContext,
 			networkMode: "online", // default
 			// mutationKey: messageKeys.shot(chatid),
-			onMutate: async (variables) => {
+			onMutate: (variables) => {
 				variables.data.status = "Sending";
 				setSurumeCtx({
 					type: "UpdateSendingChatStatus",
@@ -99,7 +99,6 @@ export const usePostChatsMessageWithContext = () => {
 
 	return {
 		mutate,
-		queryClient,
 		status,
 		isPending,
 		failureCount,

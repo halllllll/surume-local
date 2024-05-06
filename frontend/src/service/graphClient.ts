@@ -15,6 +15,7 @@ export const AppRequests = {
 		"chat.read",
 		"chat.readbasic",
 		"chat.readwrite",
+		"files.read",
 		"files.read.all",
 		"files.readwrite.all",
 	],

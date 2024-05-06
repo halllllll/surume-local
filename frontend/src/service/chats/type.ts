@@ -1,4 +1,4 @@
-import { components } from '@/types/oas';
+import type { components } from "@/types/oas";
 
 export type ChatsAPIResponse =
-  components['responses']['microsoft.graph.chatCollectionResponse']['content']['application/json'];
+	components["responses"]["microsoft.graph.chatCollectionResponse"]["content"]["application/json"];
