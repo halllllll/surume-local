@@ -83,9 +83,7 @@ export const useUploadFile = () => {
 			queryClient.invalidateQueries({ queryKey: driveitemkeys.all });
 		},
 		retry: (failureCount, error) => {
-			console.error(error);
-			// return failureCount < 3;
-			return failureCount < 1;
+			return failureCount < 3;
 		},
 	});
 
@@ -105,10 +103,8 @@ export const useUploadFiles = <T>(setEachResult: (t: T) => void) => {
 			queryClient.invalidateQueries({ queryKey: driveitemkeys.all });
 			setEachResult(data);
 		},
-		retry: (failureCount, error) => {
-			console.error(error);
-			// return failureCount < 3;
-			return failureCount < 1;
+		retry: (failureCount, _error) => {
+			return failureCount < 3;
 		},
 	});
 

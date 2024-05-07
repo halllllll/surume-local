@@ -17,7 +17,6 @@ import { ManageRoot } from "@/view/ManageRoot";
 export const Home: FC = () => {
 	const entraidInfo = useLoaderData() as GetEntraIdInfoResponse;
 
-	console.log("ok?");
 	if (!entraidInfo.success) {
 		throw new ServerError(entraidInfo.error);
 	}

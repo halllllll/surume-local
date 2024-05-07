@@ -45,7 +45,6 @@ export const Fire: FC = () => {
 					//   });
 					// },
 					onError: (err) => {
-						console.error("?????????");
 						console.error(err);
 						toast({
 							title: "Error",

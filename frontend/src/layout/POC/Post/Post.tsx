@@ -211,13 +211,6 @@ export const Post: FC = () => {
 		//   // )
 
 		// }
-		console.log("formdata");
-		console.dir(formData);
-		console.log("files?");
-		for (const f of files) {
-			console.log(f);
-		}
-
 		/*
     postChatMessage(
       { ...formData },
@@ -251,9 +244,14 @@ export const Post: FC = () => {
 				</Heading>
 			</Center>
 			<Box w="max-content">
-				<Alert status="info">
+				<Alert status="warning">
 					<AlertIcon />
-					here is developmental poc view, so including a log of bugs🐛
+					<Box>
+						<Text fontWeight={"bold"}>{"ARCHIVED (almost)"}</Text>
+						<Text>
+							here is developmental poc view, so including a log of bugs🐛
+						</Text>
+					</Box>
 				</Alert>
 			</Box>
 			<Divider />
