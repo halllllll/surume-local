@@ -31,6 +31,9 @@ export const ManageRoot: FC = () => {
 									<Link to={"/fire"}>
 										<BaseCard2>Fire</BaseCard2>
 									</Link>
+									<Link to={"/member"}>
+										<BaseCard2>Chat Members</BaseCard2>
+									</Link>
 									<Link to={"/post"}>
 										<BaseCard2>Manual Post(for POC)</BaseCard2>
 									</Link>

@@ -76,18 +76,19 @@ const DownloadLink: FC = () => {
 							</>
 						)}
 					</Flex>
-					<Box width="100%" overflowX="auto" overflowY="auto" maxHeight={500}>
+					<Box
+						width="100%" /*overflowX="auto"*/
+						overflowY="auto"
+						maxHeight={500}
+					>
 						<Table size={"sm"}>
 							<Thead position={"sticky"} top="0" bgColor={bg}>
 								<Tr>
 									<Th scope="col">No.</Th>
-									<Th scope="col">Type</Th>
-									<Th
-										scope="col"
-										width={"100px"}
-										wordBreak={"break-word"}
-										overflowWrap={"anywhere"}
-									>
+									<Th scope="col" minW={"80px"}>
+										Type
+									</Th>
+									<Th scope="col" minW={"200px"}>
 										ID
 									</Th>
 									<Th scope="col">topic</Th>
@@ -101,8 +102,8 @@ const DownloadLink: FC = () => {
 									return (
 										<Tr key={v?.id}>
 											<Td>{idx + 1}</Td>
-											<Td>{v?.type}</Td>
-											<Td width={"100px"}>{v?.id}</Td>
+											<Td overflowWrap={"anywhere"}>{v?.type}</Td>
+											<Td overflowWrap={"anywhere"}>{v?.id}</Td>
 											<Td>{v?.topic}</Td>
 											<Td>{v?.createdat}</Td>
 											<Td>{v?.updatedat}</Td>
