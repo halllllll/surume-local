@@ -3,9 +3,10 @@ import { driveitemkeys } from "./key";
 import {
 	createFolder,
 	getDriveItemByNameUnderRoot,
+	uploadFile,
 	validFolder,
 } from "./functions";
-import type { DriveItem, EssentialFolderParts } from "./type";
+import type { DriveItem, EssentialFolderParts, UploadFileProps } from "./type";
 import type { GraphError } from "@/errors/errors";
 
 // mutationを使う
@@ -59,6 +60,50 @@ export const useCreateFolder = () => {
 		mutationKey: driveitemkeys.all,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: driveitemkeys.all });
+		},
+		retry: (failureCount, error) => {
+			console.error(error);
+			return failureCount < 3;
+		},
+	});
+
+	return { mutate, isPending, status, error, failureReason };
+};
+
+export const useUploadFile = () => {
+	const queryClient = useQueryClient();
+	const { mutate, isPending, status, error, failureReason } = useMutation<
+		DriveItem,
+		GraphError,
+		UploadFileProps
+	>({
+		mutationFn: uploadFile,
+		mutationKey: driveitemkeys.all,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: driveitemkeys.all });
+		},
+		retry: (failureCount, error) => {
+			console.error(error);
+			// return failureCount < 3;
+			return failureCount < 1;
+		},
+	});
+
+	return { mutate, isPending, status, error, failureReason };
+};
+
+export const useUploadFiles = <T>(setEachResult: (t: T) => void) => {
+	const queryClient = useQueryClient();
+	const { mutate, isPending, status, error, failureReason } = useMutation<
+		T,
+		GraphError,
+		UploadFileProps
+	>({
+		mutationFn: uploadFile,
+		mutationKey: driveitemkeys.all,
+		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: driveitemkeys.all });
+			setEachResult(data);
 		},
 		retry: (failureCount, error) => {
 			console.error(error);

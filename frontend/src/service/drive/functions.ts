@@ -1,6 +1,6 @@
 import { FolderNotFound, GraphError } from "@/errors/errors";
 import { prepareClient, prepareClientWithBearer } from "../graphClient";
-import type { DriveItem, EssentialFolderParts } from "./type";
+import type { DriveItem, EssentialFolderParts, UploadFileProps } from "./type";
 
 export type ValidFolderReponse =
 	| {
@@ -11,20 +11,19 @@ export type ValidFolderReponse =
 			folder: DriveItem;
 	  };
 
-export const isFolder = async (
-	driveId: string,
-	itemId: string,
-	accessToken?: string,
-): Promise<boolean> => {
-	console.warn("gogo isfloder");
-	const driveClient = accessToken
-		? prepareClientWithBearer(accessToken)
+export const isFolder = async (payload: {
+	driveId: string;
+	itemId: string;
+	token: string;
+}): Promise<boolean> => {
+	const driveClient = payload.token
+		? prepareClientWithBearer(payload.token)
 		: prepareClient();
 	const res = await driveClient.GET("/drives/{drive-id}/items/{driveItem-id}", {
 		params: {
 			path: {
-				"drive-id": driveId,
-				"driveItem-id": itemId,
+				"drive-id": payload.driveId,
+				"driveItem-id": payload.itemId,
 			},
 			body: {},
 			query: {},
@@ -36,6 +35,49 @@ export const isFolder = async (
 	return !!res.data.folder;
 };
 
+export const uploadFile = async <T>(data: UploadFileProps): Promise<T> => {
+	/*
+		生成されたクライアントコードでこのエンドポイントAPIの使い方がいまいちよくわからない
+		const driveClient = accessToken
+			? prepareClientWithBearer(accessToken)
+			: prepareClient();
+		https://learn.microsoft.com/en-us/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=http とbodyの型の乖離のため使用せず 
+		const res = await driveClient.PUT(
+			"/drives/{drive-id}/items/{driveItem-id}/content",
+			{
+				params: {
+					path: {
+						"drive-id": "",
+						"driveItem-id": "",
+					},
+				},
+				body: "",
+			},
+		);
+		*/
+
+	// 生fetchを使うことにする
+	const res = await fetch(
+		// 逆かもしれねェ
+		`https://graph.microsoft.com/v1.0/drives/${data.distParentId}/items/${
+			data.distDriveItemId
+		}:/${encodeURIComponent(data.file.name)}:/content`,
+		{
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/octet-stream",
+				Authorization: `Bearer ${data.token}`,
+			},
+			body: data.file,
+		},
+	);
+	if (!res.ok) {
+		const err = await res.json();
+		throw err.error as unknown as GraphError;
+	}
+	return await res.json();
+};
+
 export const getDriveItemByNameUnderRoot = async (payload: {
 	token: string;
 	folderName: string;
@@ -43,14 +85,7 @@ export const getDriveItemByNameUnderRoot = async (payload: {
 	// 現行のOASではpath-basedなOneDriveAPIが存在しないようである
 	// https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0
 	// https://learn.microsoft.com/en-us/graph/onedrive-addressing-driveitems
-	// const { instance } = useMsal();
-	// const {accessToken} = await getAccessToken(instance);
 	const accessToken = payload.token;
-	console.warn(
-		`foldername? ${payload.folderName}, encoded: ${encodeURIComponent(
-			payload.folderName,
-		)}`,
-	);
 	const url = `https://graph.microsoft.com/v1.0/me/drive/root:/${encodeURIComponent(
 		payload.folderName,
 	)}`;
@@ -147,9 +182,12 @@ export const validFolder = async (payload: {
 			message: "Nothing ItemID",
 		});
 	}
-	console.warn("get drive and item id");
 	const _driveId = driveId as string;
-	const res = await isFolder(_driveId, itemId, payload.token);
+	const res = await isFolder({
+		driveId: _driveId,
+		itemId,
+		token: payload.token,
+	});
 	if (!res) {
 		throw new FolderNotFound(`${payload.folderName} is Not A Folder`);
 	}

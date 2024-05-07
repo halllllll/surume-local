@@ -8,7 +8,7 @@ import { Post } from "@/layout/POC/Post/Post";
 import { ServerError } from "@azure/msal-browser";
 import { useIsAuthenticated } from "@azure/msal-react";
 import type { FC, ReactNode } from "react";
-import { CheckingFolder } from "@/layout/POC/ExitFolder/CheckingFolder";
+import { FolderUtilRoot } from "@/layout/POC/ExitFolder/FolderUtilRoot";
 
 function ErrorBoundary() {
 	const e = useRouteError();
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
 				path: "/isexistfolder",
 				element: (
 					<EntraAuth>
-						<CheckingFolder />
+						<FolderUtilRoot />
 					</EntraAuth>
 				),
 			},

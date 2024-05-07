@@ -7,6 +7,15 @@ export type DriveItemResponse =
 
 export type DriveItem = components["schemas"]["microsoft.graph.driveItem"];
 
+// export type RequiredDrive = SomeRequired<
+// 	DriveItem,
+// 	"id" | "parentReference" | "eTag" | "cTag" | "folder"
+// >;
+// export type RequiredFile = SomeRequired<
+// 	DriveItem,
+// 	"id" | "parentReference" | "eTag" | "cTag" | "file"
+// >;
+
 // export type BaseItem = components["schemas"]["microsoft.graph.driveItem"];
 
 export type EssentialFolderParts = {
@@ -14,4 +23,18 @@ export type EssentialFolderParts = {
 	parentFolderId: string;
 	targetFolderId: string;
 	folderName: string;
+};
+
+export type UploadFileProps = {
+	token: string;
+	distDriveItemId: string;
+	distParentId: string;
+	file: File;
+};
+
+export type UploadFilesProps = {
+	token: string;
+	distDriveItemId: string;
+	distParentId: string;
+	files: File[];
 };

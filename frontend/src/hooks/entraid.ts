@@ -22,8 +22,7 @@ export const useAzureAuth = () => {
 	return { logoutAzure, inProgress, userId, isAuthenticated };
 };
 
-export const useAzureAuthLogin = (redilect_uri: string) => {
-	console.log(`redirect uri?? ${redilect_uri}`);
+export const useAzureAuthLogin = () => {
 	const { instance, inProgress } = useMsal();
 
 	const loginAzure = useCallback(async () => {
