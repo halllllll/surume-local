@@ -14,25 +14,12 @@ require (
 )
 
 require (
-	github.com/MicahParks/jwkset v0.5.17 // indirect
-	github.com/MicahParks/keyfunc/v3 v3.3.2 // indirect
-	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
-	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
-	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
-	github.com/lestrrat-go/httpcc v1.0.1 // indirect
-	github.com/lestrrat-go/httprc v1.0.5 // indirect
-	github.com/lestrrat-go/iter v1.0.2 // indirect
-	github.com/lestrrat-go/jwx v1.2.29 // indirect
-	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
-	github.com/segmentio/asm v1.2.0 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/xuri/efp v0.0.0-20231025114914-d1ff6096ae53 // indirect
 	github.com/xuri/nfp v0.0.0-20230919160717-d98342af3f05 // indirect
-	golang.org/x/time v0.5.0 // indirect
 )
 
 require (
@@ -49,7 +36,6 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/lestrrat-go/jwx/v2 v2.0.21
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
