@@ -42,5 +42,4 @@ func Utils(db *sql.DB, logger *slog.Logger) controller.FileControllerer {
 	s := service.NewFileServicer(r, tx)
 
 	return controller.NewFileController(s)
-
 }

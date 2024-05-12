@@ -1,6 +1,6 @@
 import { useMsal } from "@azure/msal-react";
 import { getAccessToken, prepareClient } from "../graphClient";
-import type { Chat, ChatMembers, ChatsAPIResponse } from "./type";
+import type { ChatMembers, ChatsAPIResponse } from "./type";
 
 export const getChats = async (nextLink: string): Promise<ChatsAPIResponse> => {
 	if (nextLink.slice(nextLink.indexOf("?$skiptoken"), -1) === "") {

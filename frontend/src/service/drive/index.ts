@@ -82,7 +82,7 @@ export const useUploadFile = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: driveitemkeys.all });
 		},
-		retry: (failureCount, error) => {
+		retry: (failureCount) => {
 			return failureCount < 3;
 		},
 	});

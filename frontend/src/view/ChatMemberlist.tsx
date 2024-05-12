@@ -10,7 +10,7 @@ type Props = {
 	chatId: string;
 };
 const ChatList: FC<Props> = ({ chatId }) => {
-	const { data, isPending, status, error } = useGetChatInfo(chatId);
+	const { data, isPending, error } = useGetChatInfo(chatId);
 	if (isPending) return <>{"fetching members.."}</>;
 	if (error)
 		return (

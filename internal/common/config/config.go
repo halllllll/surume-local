@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/caarlos0/env/v10"
-	_ "github.com/joho/godotenv/autoload"
+	// _ "github.com/joho/godotenv/autoload"
 )
 
 type appEnv string

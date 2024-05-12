@@ -24,13 +24,16 @@ func SetRoutes(r *gin.Engine, db *sql.DB, logger *slog.Logger) {
 	entraIdCtrl := di.InitEntraId(db)
 	delete := di.Init(db, logger)
 
+	restrited := api.Group("/util")
+	// restrited.Use(msalの認証を使ったミドルウェアを検討しているがアーキテクチャにどう組み込むのか悩み中)
+
 	{
 		api.GET("/entraid", entraIdCtrl.GetInfo)
 		api.POST("/system/entraid", entraIdCtrl.Setup)
 		api.POST("/system/user", entraIdCtrl.SetAccountInfo)
 		api.DELETE("/system/reset", delete.Reset)
 
-		api.POST("/util/validateTemplate", utilsCtrl.ValidateTemplate)
+		restrited.POST("/validateTemplate", utilsCtrl.ValidateTemplate)
 	}
 
 	r.GET("/health", healthHandler)

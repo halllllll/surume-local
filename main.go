@@ -21,6 +21,7 @@ import (
 	sloggin "github.com/samber/slog-gin"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 // info: Makefileのbuild参照。`make build`時にプロダクション用の値をセットする

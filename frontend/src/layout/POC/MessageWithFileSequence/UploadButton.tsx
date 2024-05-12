@@ -15,12 +15,8 @@ export const Upload: FC<Props> = ({
 	files,
 	setUploadedDriveItem,
 }) => {
-	const {
-		mutate: uploadFile,
-		isPending,
-		status,
-		error,
-	} = useUploadFiles(setUploadedDriveItem);
+	const { mutate: uploadFile, isPending } =
+		useUploadFiles(setUploadedDriveItem);
 	const { instance } = useMsal();
 	const toast = useToast();
 

@@ -19,14 +19,9 @@ import {
 } from "@chakra-ui/react";
 import { useState, type FC, useRef } from "react";
 
-import { format } from "date-fns";
 import { type SubmitHandler, useForm, FormProvider } from "react-hook-form";
 import type { ChatMessageData } from "@/types/types";
 import { UploadFiles } from "@/component/button/UploadFiles";
-import {
-	useCreateFolder,
-	// useGetDriveItemByNameBeneathRoot,
-} from "@/service/drive";
 import { SelectedFileField } from "@/view/SelectedFileField";
 
 // 機能テスト用の画面
@@ -36,7 +31,7 @@ type Props = {
 	files: File[];
 	updateLoadingStatus: (v: boolean) => void;
 };
-const StatusExistFolder: FC<Props> = ({ target, updateLoadingStatus }) => {
+const StatusExistFolder: FC<Props> = ({ target /*updateLoadingStatus*/ }) => {
 	/*
 	const {
 		data: _data,
@@ -110,8 +105,7 @@ export const Post: FC = () => {
 		setCheckingState(true);
 		methods.setValue("attachement.dist", t);
 	};
-	// const { mutate: postChatMessage } = usePostChatMessageText();
-	const { mutate: createFolder } = useCreateFolder();
+	// const { mutate: createFolder } = useCreateFolder();
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		// validation
