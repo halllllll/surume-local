@@ -1,6 +1,6 @@
 module github.com/halllllll/surume-local
 
-go 1.22.1
+go 1.22.4
 
 require (
 	github.com/caarlos0/env/v10 v10.0.0
