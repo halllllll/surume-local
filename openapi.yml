@@ -1,8 +1,8 @@
 # とりあえずファイルだけ作ったがGoのcodegenはほぼ見送る予定 TSはopenapi-fetchを使う
-openapi: "3.0.3"
+openapi: "3.1.3"
 info:
   title: SURUME-Local
-  description: surume local 
+  description: surume local
   version: "1.0.0"
 servers:
   - url: http://{host}:{port}/api
@@ -11,7 +11,7 @@ servers:
       host:
         default: localhost
       port:
-        default: '24601'
+        default: "24601"
 tags:
   - name: History
     description: |
@@ -87,7 +87,6 @@ paths:
         default:
           $ref: "#/components/responses/500InternalServerError"
 
-  
   /system/maintenance:
     put:
       summary: mentenance info
@@ -161,7 +160,7 @@ components:
           description: error message
       required:
         - success
-        - message  
+        - message
 
     EntraIdInfo:
       type: object
@@ -226,7 +225,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/EntraIdInfo"
-    
+
     SwitchMaintenanceModeRequestBody:
       required: true
       content:
@@ -244,7 +243,7 @@ components:
         multipart/form-data:
           schema:
             $ref: "#/components/schemas/XlsxFile"
-          
+
   responses:
     DeleteTargetResponse:
       description: success operation
@@ -344,6 +343,5 @@ components:
             $ref: "#/components/schemas/ErrorBase"
           example:
             success: false
-            code: '999'
+            code: "999"
             message: "system error!"
-    
