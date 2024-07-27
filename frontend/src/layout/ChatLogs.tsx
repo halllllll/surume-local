@@ -118,7 +118,7 @@ export const ChatLogs: FC = () => {
 	});
 
 	// TODO: とりあえず複数追加できるようにしたが、複数のinfinitequeryの投げ方のいい実装がわからず、追加を実装していない。
-	const { fields, append, remove } = useFieldArray({
+	const { fields /*append, _remove*/ } = useFieldArray({
 		control: methods.control,
 		name: "chats",
 	});
