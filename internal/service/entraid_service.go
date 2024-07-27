@@ -114,6 +114,6 @@ func (es *entraidService) SetAccount(ctx context.Context, data *models.User) (Re
 
 func (es *entraidService) DeleteAccount(ctx context.Context, data *models.User) error {
 
-	// TODO: GOGOGOGOGOO
+	// TODO:
 	return nil
 }
