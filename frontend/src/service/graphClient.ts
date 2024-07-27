@@ -53,7 +53,7 @@ export const getAccessToken = async (
 };
 
 const authMiddleware: Middleware = {
-	async onRequest(req) {
+	async onRequest({ request: req }) {
 		const { instance } = useMsal();
 		const { accessToken: at } = await getAccessToken(instance);
 		req.headers.set("Authorization", `Bearer ${at}`);
