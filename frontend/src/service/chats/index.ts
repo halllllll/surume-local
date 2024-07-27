@@ -107,7 +107,7 @@ export const useGetChatLogsPagenate = (props: ChatLogsParam) => {
 		networkMode: "offlineFirst",
 		retry: (failureCount, error: GraphError) => {
 			console.warn(error);
-			if (error.code === "NotFound") {
+			if (error.code === "NotFound" || error.code === "Forbidden") {
 				return false;
 			}
 			return failureCount < 10;

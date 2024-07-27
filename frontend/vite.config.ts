@@ -27,9 +27,9 @@ export default ({ mode }) => {
 					// entryFileNames: "assets/js/[name].js",
 					manualChunks: (id) => {
 						if (id.includes("node_modules")) {
-							if (id.includes("react-dom")) {
-								return "vendor_react-dom";
-							}
+							// if (id.includes("react-dom")) {
+							// 	return "vendor_react-dom";
+							// }
 							if (id.includes("tanstack")) {
 								return "vendor_tanstack";
 							}

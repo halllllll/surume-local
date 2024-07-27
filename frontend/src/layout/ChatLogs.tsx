@@ -36,7 +36,7 @@ const ChatLogSchema = yup.object().shape({
 				.string()
 				.label("target chat id")
 				.required()
-				.matches(/^[a-z0-9\.:@]+$/gs, "include invalid character"),
+				.matches(/^[a-z0-9\.:@\-_]+$/gs, "include invalid character"),
 			outputName: yup
 				.string()
 				.label("output name")
