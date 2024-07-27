@@ -67,13 +67,17 @@ const DownloadLink: FC = () => {
 				<>
 					<Flex mb={4}>
 						<Text>{`done count: ${count}`}</Text>
-						{!hasNextPage && (
+						{!hasNextPage ? (
 							<>
 								<Spacer />
 								<Button onClick={save} disabled={onSave}>
 									download xlsx
 								</Button>
 							</>
+						) : (
+							<Box px={4}>
+								<Spinner />
+							</Box>
 						)}
 					</Flex>
 					<Box

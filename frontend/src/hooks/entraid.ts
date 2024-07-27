@@ -1,5 +1,5 @@
 import { AppRequests } from "@/service/graphClient";
-import type { AccountInfo } from "@azure/msal-browser";
+import { InteractionStatus, type AccountInfo } from "@azure/msal-browser";
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useMemo, useCallback } from "react";
 
@@ -25,8 +25,11 @@ export const useAzureAuth = () => {
 export const useAzureAuthLogin = () => {
 	const { instance, inProgress } = useMsal();
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const loginAzure = useCallback(async () => {
-		instance.loginPopup(AppRequests);
+		if (inProgress === InteractionStatus.None) {
+			await instance.loginPopup(AppRequests);
+		}
 	}, [instance]);
 
 	return { loginAzure, inProgress };

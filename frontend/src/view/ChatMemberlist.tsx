@@ -1,5 +1,5 @@
 import { ErrorFallback } from "@/errors/ErrorFallback";
-import { useGetChatInfo } from "@/service/chats";
+import { useGetChatMembers } from "@/service/chats";
 import type { ConversationMember } from "@/service/chats/type";
 import { Box, Table, Text, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
@@ -10,7 +10,7 @@ type Props = {
 	chatId: string;
 };
 const ChatList: FC<Props> = ({ chatId }) => {
-	const { data, isPending, error } = useGetChatInfo(chatId);
+	const { data, isPending, error } = useGetChatMembers(chatId);
 	if (isPending) return <>{"fetching members.."}</>;
 	if (error)
 		return (
