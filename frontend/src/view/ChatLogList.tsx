@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import { format } from "date-fns";
 
 const ChatList: FC<ChatLogsParam> = (d) => {
-	const { data, hasNextPage, fetchNextPage, isPending, error } =
+	const { data, hasNextPage, fetchNextPage, isError, isPending, error } =
 		useGetChatLogsPagenate(d);
 	if (isPending) return <>{"fetching chat logs.."}</>;
 	if (error)
@@ -27,6 +27,7 @@ const ChatList: FC<ChatLogsParam> = (d) => {
 
 	if (hasNextPage) {
 		fetchNextPage();
+	} else if (!isError && !isPending) {
 	}
 
 	const save = async () => {
@@ -37,7 +38,7 @@ const ChatList: FC<ChatLogsParam> = (d) => {
 			{ header: "date", key: "date" },
 			{ header: "username", key: "username" },
 			{ header: "content", key: "content" },
-			{ header: "filenames", key: "filesnames" },
+			{ header: "filenames", key: "filenames" },
 			{ header: "url", key: "url" },
 		];
 
@@ -47,11 +48,10 @@ const ChatList: FC<ChatLogsParam> = (d) => {
 			for (const vv of value) {
 				const chatuserdata = vv.from?.user as unknown as ChatUser;
 				worksheet.addRow({
-					date: vv.createdDateTime,
+					date: vv.createdDateTime ? new Date(vv.createdDateTime) : "----",
 					username: chatuserdata?.displayName ?? "----",
 					content: vv.body?.content ?? "----",
-					filenames:
-						vv.attachments?.map((a) => a.name ?? "null").join(", ") ?? "",
+					filenames: vv.attachments?.map((a) => a.name ?? "null").join(", "),
 					url: `https://teams.microsoft.com/l/message/${vv.chatId}/${vv.id}?context=${encodeURIComponent('{"contextType":"chat"}')}`,
 				});
 			}
@@ -66,12 +66,15 @@ const ChatList: FC<ChatLogsParam> = (d) => {
 
 	return (
 		<Box width={"100%"} my={4}>
-			{!hasNextPage && isPending ? (
+			{hasNextPage || isPending ? (
 				<>
 					fetching.... <Spinner />
 				</>
 			) : (
-				<Button onClick={save}>Download</Button>
+				<Box>
+					<Button onClick={save}>Download</Button>
+					{/* <Text>{`(count: ${count})`}</Text> */}
+				</Box>
 			)}
 		</Box>
 	);

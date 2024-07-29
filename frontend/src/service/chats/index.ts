@@ -83,6 +83,8 @@ export const useGetChatMembers = (chatId: string) => {
 			}
 			return failureCount < 3;
 		},
+		staleTime: 0,
+		gcTime: 0,
 		retryOnMount: true,
 		queryKey: chatKeys.members(chatId),
 		queryFn: () => getChatMembers(chatId),

@@ -36,7 +36,7 @@ const ChatLogSchema = yup.object().shape({
 				.string()
 				.label("target chat id")
 				.required()
-				.matches(/^[a-z0-9\.:@\-_]+$/gs, "include invalid character"),
+				.matches(/^[a-z0-9\.:@\-_]+$/gs, "including invalid character"),
 			outputName: yup
 				.string()
 				.label("output name")
@@ -44,7 +44,7 @@ const ChatLogSchema = yup.object().shape({
 				.max(30)
 				.test(
 					"excel-sheetname",
-					"include ng character(`\\`, `:`, `?`, `*`, `[` or `]`)",
+					"including ng character(`\\`, `:`, `?`, `*`, `[` or `]`)",
 					(value) => {
 						const ng = [
 							"\\",
