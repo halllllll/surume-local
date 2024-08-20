@@ -1,4 +1,4 @@
-import type { ChatLogsParam } from "@/layout/ChatLogs";
+import type { ChatLogsParam } from "@/scheme/chatLogs";
 
 export const chatKeys = {
 	just: ["chats"] as const,

@@ -1,12 +1,10 @@
-import {
-	useSuspenseInfiniteQuery,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getChatData, getChatMembers, getNextChats } from "./functions";
 import type { ChatsAPIResponse, ChatMembers, ChatData } from "./type";
 import { chatKeys } from "./key";
 import type { GraphError } from "@/errors/errors";
-import type { ChatLogsParam } from "@/layout/ChatLogs";
+import type { ChatLogsParam } from "@/scheme/chatLogs";
+import type { ChatMemberParam } from "@/scheme/chatMember";
 
 export const useGetChatsPaginate = () => {
 	const {
@@ -70,27 +68,57 @@ export const useGetChatsPaginate = () => {
 	};
 };
 
-export const useGetChatMembers = (chatId: string) => {
-	const { data, refetch, status, isPending, error } = useSuspenseQuery<
-		ChatMembers,
-		GraphError
-	>({
-		networkMode: "offlineFirst",
-		retry: (failureCount, error) => {
-			console.warn(error);
-			if (error.code === "NotFound") {
-				return false;
-			}
-			return failureCount < 3;
+export const useGetChatMembers = (param: ChatMemberParam) => {
+	// const { data, refetch, status, isPending, isFetching, error } =
+	// 	useSuspenseQuery<ChatMembers, GraphError>({
+	// 		networkMode: "offlineFirst",
+	// 		retry: (failureCount, error) => {
+	// 			console.warn(error);
+	// 			if (error.code === "NotFound") {
+	// 				return false;
+	// 			}
+	// 			return failureCount < 3;
+	// 		},
+	// 		staleTime: 300,
+	// 		gcTime: 20,
+	// 		retryOnMount: true,
+	// 		queryKey: chatKeys.members(chatId),
+	// 		queryFn: () => getChatMembers(chatId),
+	// 	});
+
+	// return { data, refetch, isPending, isFetching, status, error };
+	const {
+		data,
+		refetch,
+		isPending,
+		hasNextPage,
+		fetchNextPage,
+		isError,
+		isFetching,
+		isLoading,
+		error,
+	} = useSuspenseInfiniteQuery({
+		queryKey: chatKeys.members(param.chatId),
+		queryFn: ({ pageParam }) => getChatMembers(pageParam),
+		getNextPageParam: (lastPage: ChatMembers) => {
+			const ret = lastPage["@odata.nextLink"];
+			if (ret === null || ret === undefined) return undefined;
+			return { ...param, nextLink: ret };
 		},
-		staleTime: 0,
-		gcTime: 0,
-		retryOnMount: true,
-		queryKey: chatKeys.members(chatId),
-		queryFn: () => getChatMembers(chatId),
+		initialPageParam: { ...param, nextLink: "" },
 	});
 
-	return { data, refetch, isPending, status, error };
+	return {
+		data,
+		refetch,
+		isPending,
+		hasNextPage,
+		fetchNextPage,
+		isError,
+		isFetching,
+		isLoading,
+		error,
+	};
 };
 
 export const useGetChatLogsPagenate = (props: ChatLogsParam) => {

@@ -3,6 +3,7 @@ import { getAccessToken, prepareClient } from "../graphClient";
 import type {
 	ChatData,
 	ChatLogsParamWithNextLink,
+	ChatMemberParamWithNextLink,
 	ChatMembers,
 	ChatsAPIResponse,
 } from "./type";
@@ -41,29 +42,19 @@ export const getNextChats = async (
 	return await res.json();
 };
 
-export const getChatMembers = async (chatId: string): Promise<ChatMembers> => {
+// TODO: exist `nextlink` flow
+export const getChatMembers = async (
+	p: ChatMemberParamWithNextLink,
+): Promise<ChatMembers> => {
 	// const client = prepareClientWithBearer(token);
 	const client = prepareClient();
 	const res = await client.GET("/chats/{chat-id}/members", {
 		params: {
 			path: {
-				"chat-id": chatId,
+				"chat-id": p.chatId,
 			},
 		},
 	});
-	// const res = await client.GET("/chats/{chat-id}", {
-	// 	params: {
-	// 		path: {
-	// 			"chat-id": chatId,
-	// 		},
-	// 		query: {
-	// 			$expand: ["members"],
-	// 		},
-	// 	},
-	// });
-	// if (!res.data.members) {
-	// 	return [];
-	// }
 
 	if (res.error) {
 		throw res.error.error;

@@ -1,5 +1,5 @@
 import { ErrorFallback } from "@/errors/ErrorFallback";
-import type { ChatLogsParam, ChatLogsParams } from "@/layout/ChatLogs";
+import type { ChatLogsParam, ChatLogsParams } from "@/scheme/chatLogs";
 import { useGetChatLogsPagenate } from "@/service/chats";
 import type { ChatUser } from "@/service/chats/type";
 import { Box, Button, Spinner } from "@chakra-ui/react";
