@@ -83,7 +83,7 @@ const ChatList: FC<{
 								<Tr key={d.id}>
 									<Td>{`${d.email}`}</Td>
 									<Td>{`${d.displayName}`}</Td>
-									<Td>{`${d.roles}`}</Td>
+									<Td>{`${d.roles.join(",")}`}</Td>
 								</Tr>
 							);
 						})}
