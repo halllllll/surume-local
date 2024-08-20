@@ -29,7 +29,7 @@ export const ManageRoot: FC = () => {
 										<BaseCard2>Belonging Chats List</BaseCard2>
 									</Link>
 									<Link to={"/fire"}>
-										<BaseCard2>Fire</BaseCard2>
+										<BaseCard2>BroadCast</BaseCard2>
 									</Link>
 									<Link to={"/member"}>
 										<BaseCard2>Chat Members</BaseCard2>

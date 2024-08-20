@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, Spacer } from "@chakra-ui/react";
+import {
+	Box,
+	Flex,
+	Heading,
+	Spacer,
+	Text,
+	Image,
+	HStack,
+} from "@chakra-ui/react";
 import type { ReactNode, FC } from "react";
 import { ColorSwitchButton } from "@/component/button/ColorSwitch";
 import { Link } from "react-router-dom";
@@ -13,11 +21,17 @@ export const Header: FC<{ children: ReactNode }> = ({ children }) => {
 				boxSize="full"
 				position="static"
 				height="20"
+				mt={4}
 			>
 				{children}
 				<Spacer />
-				<Heading>
-					<Link to="/">Surume</Link>
+				<Heading height={"100px"}>
+					<Link to="/">
+						<HStack gap={4}>
+							<Text>Surume</Text>
+							<Image src={"../../public/surume.svg"} boxSize={"60px"} />
+						</HStack>
+					</Link>
 				</Heading>
 				<Spacer />
 				<ColorSwitchButton

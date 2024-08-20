@@ -5,7 +5,6 @@ import {
 	Button,
 	Flex,
 	Link,
-	Spacer,
 	Spinner,
 	Table,
 	Tbody,
@@ -65,11 +64,10 @@ const DownloadLink: FC = () => {
 				</Flex>
 			) : (
 				<>
-					<Flex mb={4}>
+					<Flex mb={4} gap={10} align={"center"}>
 						<Text>{`done count: ${count}`}</Text>
 						{!hasNextPage ? (
 							<>
-								<Spacer />
 								<Button onClick={save} disabled={onSave}>
 									download xlsx
 								</Button>

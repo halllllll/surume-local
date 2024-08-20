@@ -1,4 +1,6 @@
-import type { ChatLogsParam } from "@/layout/ChatLogs";
+import type { ChatLogsParam } from "@/scheme/chatLogs";
+import type { ChatMemberParam } from "@/scheme/chatMember";
+
 import type { components } from "@/types/oas";
 
 export type ChatsAPIResponse =
@@ -24,5 +26,9 @@ export type ConversationMember =
 	components["schemas"]["microsoft.graph.conversationMember"];
 
 export type ChatLogsParamWithNextLink = ChatLogsParam & {
+	nextLink: string | null | undefined;
+};
+
+export type ChatMemberParamWithNextLink = ChatMemberParam & {
 	nextLink: string | null | undefined;
 };

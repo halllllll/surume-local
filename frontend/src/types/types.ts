@@ -1,4 +1,5 @@
 import type { SURUMEError } from "@/errors/errors";
+import type { ConversationMember } from "@/service/chats/type";
 
 export const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -31,3 +32,12 @@ export type ChatMessageData = {
 	// attachment?: string; // stringかどうかも適当だが一応つけておく
 	// attachments?: ChatMessage["attachments"];
 };
+
+// chat member
+// * OASには定義されてないがemail, userIdが存在する
+export type ChatMemberData = Required<
+	ConversationMember & {
+		email: string;
+		userId: string;
+	}
+>;
