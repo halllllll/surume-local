@@ -29,7 +29,7 @@ export const Header: FC<{ children: ReactNode }> = ({ children }) => {
 					<Link to="/">
 						<HStack gap={4}>
 							<Text>Surume</Text>
-							<Image src={"../../public/surume.svg"} boxSize={"60px"} />
+							<Image src={"/surume.svg"} boxSize={"60px"} />
 						</HStack>
 					</Link>
 				</Heading>
