@@ -1,5 +1,12 @@
 import { UploadXlsxFile } from "@/component/button/UploadXlsxFile";
-import { Box, Button, HStack, useToast } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Divider,
+	Heading,
+	HStack,
+	useToast,
+} from "@chakra-ui/react";
 import { useRef, type FC } from "react";
 import { ChatMessages } from "@/view/BroadCast/ChatMessages";
 import { FireBroadCast } from "@/component/button/FireBroadCast";
@@ -11,6 +18,7 @@ import { download } from "./dl";
 import { FireCount } from "./Count";
 import { useMsal } from "@azure/msal-react";
 import { getAccessToken } from "@/service/graphClient";
+import { DownloadTemplateXlsxButton } from "@/component/button/DL/DownloadTemplateXlsx";
 
 export const Fire: FC = () => {
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -72,10 +80,16 @@ export const Fire: FC = () => {
 
 	return (
 		<Box>
-			<HStack spacing={10}>
+			<Heading size={"sm"} my={3}>
+				BroadCast Chats
+			</Heading>
+			<Divider />
+
+			<HStack my={3} spacing={10}>
 				<UploadXlsxFile />
 				{/* TODO: 未実装 */}
 				<Button isDisabled={true}>{"From Log (Under Construction)"}</Button>
+				<DownloadTemplateXlsxButton path={"/static/surume.xlsx"} />
 			</HStack>
 
 			{data.length === 0 ? null : (

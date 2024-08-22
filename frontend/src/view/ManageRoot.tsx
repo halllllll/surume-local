@@ -1,4 +1,3 @@
-import { DownloadTemplateXlsxButton } from "@/component/button/DownloadTemplateXlsx";
 import { BaseCard2 } from "@/component/card/Base";
 import { ErrorFallback } from "@/errors/ErrorFallback";
 import { SimpleGrid, Box, Container } from "@chakra-ui/react";
@@ -24,7 +23,6 @@ export const ManageRoot: FC = () => {
 						{({ reset }) => (
 							<ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
 								<Suspense fallback={<b>Loading...</b>}>
-									<DownloadTemplateXlsxButton />
 									<Link to={"/chats_list"}>
 										<BaseCard2>Belonging Chats List</BaseCard2>
 									</Link>
