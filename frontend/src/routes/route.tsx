@@ -9,7 +9,7 @@ import { ServerError } from "@azure/msal-browser";
 import { useIsAuthenticated } from "@azure/msal-react";
 import type { FC, ReactNode } from "react";
 import { FolderUtilRoot } from "@/layout/POC/MessageWithFileSequence/FolderUtilRoot";
-import { ChatMember } from "@/layout/ChatMember";
+import { ChatMemberRoot } from "@/layout/ChatMember";
 import { ChatLogs } from "@/layout/ChatLogs";
 
 function ErrorBoundary() {
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
 				path: "/member",
 				element: (
 					<EntraAuth>
-						<ChatMember />
+						<ChatMemberRoot />
 					</EntraAuth>
 				),
 			},
@@ -86,8 +86,8 @@ const router = createBrowserRouter([
 					<EntraAuth>
 						<ChatLogs />
 					</EntraAuth>
-				)
-			}
+				),
+			},
 		],
 	},
 	{

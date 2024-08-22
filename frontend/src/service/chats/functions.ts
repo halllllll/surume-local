@@ -1,5 +1,9 @@
 import { useMsal } from "@azure/msal-react";
-import { getAccessToken, prepareClient } from "../graphClient";
+import {
+	getAccessToken,
+	prepareClient,
+	useGraphNextLink,
+} from "../graphClient";
 import type {
 	ChatData,
 	ChatLogsParamWithNextLink,
@@ -46,21 +50,40 @@ export const getNextChats = async (
 export const getChatMembers = async (
 	p: ChatMemberParamWithNextLink,
 ): Promise<ChatMembers> => {
-	// const client = prepareClientWithBearer(token);
-	const client = prepareClient();
-	const res = await client.GET("/chats/{chat-id}/members", {
-		params: {
-			path: {
-				"chat-id": p.chatId,
+	if (p.nextLink === "" || p.nextLink === null || p.nextLink === undefined) {
+		const client = prepareClient();
+		const res = await client.GET("/chats/{chat-id}/members", {
+			params: {
+				path: {
+					"chat-id": p.chatId,
+				},
 			},
-		},
-	});
+		});
 
-	if (res.error) {
-		throw res.error.error;
+		if (res.error) {
+			throw res.error.error;
+		}
+		return res.data;
 	}
 
-	return res.data;
+	// skiptokenに対応したclientがないのでnextlinkを直接fetchする
+	// // const { instance } = useMsal();
+	// // const { accessToken: at } = await getAccessToken(instance);
+	// // const res = await fetch(p.nextLink, {
+	// // 	headers: {
+	// // 		Authorization: `Bearer ${at}`,
+	// // 	},
+	// // });
+	// // if (!res.ok) {
+	// // 	console.error(res.body);
+	// // 	throw res.body;
+	// // }
+	// // return await res.json();
+
+	// TODO: エラー時の型の設定方法がわからず未設定
+	const ret = useGraphNextLink<ChatMembers>(p.nextLink);
+
+	return ret;
 };
 
 // ログを取りたいよ
@@ -92,16 +115,20 @@ export const getChatData = async (
 		return res.data;
 	}
 	// skiptokenに対応したclientがないのでnextlinkを直接fetchする
-	const { instance } = useMsal();
-	const { accessToken: at } = await getAccessToken(instance);
-	const res = await fetch(p.nextLink, {
-		headers: {
-			Authorization: `Bearer ${at}`,
-		},
-	});
-	if (!res.ok) {
-		console.error(res.body);
-		throw res.body;
-	}
-	return await res.json();
+	// const { instance } = useMsal();
+	// const { accessToken: at } = await getAccessToken(instance);
+	// const res = await fetch(p.nextLink, {
+	// 	headers: {
+	// 		Authorization: `Bearer ${at}`,
+	// 	},
+	// });
+	// if (!res.ok) {
+	// 	console.error(res.body);
+	// 	throw res.body;
+	// }
+	// return await res.json();
+
+	// TODO: エラー時の型の設定方法がわからず未設定
+	const ret = useGraphNextLink<ChatData>(p.nextLink);
+	return ret;
 };

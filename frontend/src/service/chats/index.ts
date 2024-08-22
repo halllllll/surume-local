@@ -1,10 +1,14 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { getChatData, getChatMembers, getNextChats } from "./functions";
-import type { ChatsAPIResponse, ChatMembers, ChatData } from "./type";
+import type {
+	ChatsAPIResponse,
+	ChatMembers,
+	ChatData,
+	ChatMemberParamWithNextLink,
+} from "./type";
 import { chatKeys } from "./key";
 import type { GraphError } from "@/errors/errors";
 import type { ChatLogsParam } from "@/scheme/chatLogs";
-import type { ChatMemberParam } from "@/scheme/chatMember";
 
 export const useGetChatsPaginate = () => {
 	const {
@@ -68,7 +72,7 @@ export const useGetChatsPaginate = () => {
 	};
 };
 
-export const useGetChatMembers = (param: ChatMemberParam) => {
+export const useGetChatMembers = (param: ChatMemberParamWithNextLink) => {
 	// const { data, refetch, status, isPending, isFetching, error } =
 	// 	useSuspenseQuery<ChatMembers, GraphError>({
 	// 		networkMode: "offlineFirst",

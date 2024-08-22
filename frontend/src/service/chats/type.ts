@@ -29,6 +29,7 @@ export type ChatLogsParamWithNextLink = ChatLogsParam & {
 	nextLink: string | null | undefined;
 };
 
-export type ChatMemberParamWithNextLink = ChatMemberParam & {
-	nextLink: string | null | undefined;
-};
+export type ChatMemberParamWithNextLink =
+	ChatMemberParam["chatMembers"][number] & {
+		nextLink: string | null | undefined;
+	};

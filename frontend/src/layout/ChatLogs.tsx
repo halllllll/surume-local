@@ -37,7 +37,7 @@ export const ChatLogs: FC = () => {
 	const [targetData, setTargetData] = useState<ChatLogsParams>(defaultVal);
 	const [btnState, updateBtnState] = useState<boolean>(false);
 	const methods = useForm<ChatLogsParams>({
-		mode: "all",
+		mode: "onSubmit",
 		criteriaMode: "all",
 		defaultValues: defaultVal,
 		resolver: yupResolver<ChatLogsParams>(ChatLogSchema),

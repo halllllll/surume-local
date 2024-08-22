@@ -92,3 +92,19 @@ export const prepareClientWithBearer = (token: string) => {
 	// client.use(throwOnError);
 	return client;
 };
+
+export const useGraphNextLink = async <T>(AZGraphNextLink: string) => {
+	const { instance } = useMsal();
+	const { accessToken: at } = await getAccessToken(instance);
+	const res = await fetch(AZGraphNextLink, {
+		headers: {
+			Authorization: `Bearer ${at}`,
+		},
+	});
+	if (!res.ok) {
+		console.error(res.body);
+		// TODO: エラーの型定義どうするの
+		throw res.body;
+	}
+	return await (<T>res.json());
+};
