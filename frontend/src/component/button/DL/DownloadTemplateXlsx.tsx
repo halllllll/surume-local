@@ -5,16 +5,11 @@ import type { XlsxTemplateFilePath } from "./path";
 export const DownloadTemplateXlsxButton: FC<{ path: XlsxTemplateFilePath }> = ({
 	path,
 }) => {
-	// TODO: XlsxTemplateFilePathからundefined and nullを除いた型定義
-	let file = "";
+	// TODO: null必要？
 	if (!path) return null;
-	switch (path) {
-		case "/static/surume.xlsx":
-			file = "/static/surume.xlsx";
-	}
 	return (
 		<Button>
-			<Link href={file} download={true}>
+			<Link href={path} download={true}>
 				Download Template File (xlsx)
 			</Link>
 		</Button>

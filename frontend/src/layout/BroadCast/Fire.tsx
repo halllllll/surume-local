@@ -89,7 +89,7 @@ export const Fire: FC = () => {
 				<UploadXlsxFile />
 				{/* TODO: 未実装 */}
 				<Button isDisabled={true}>{"From Log (Under Construction)"}</Button>
-				<DownloadTemplateXlsxButton path={"/static/surume.xlsx"} />
+				<DownloadTemplateXlsxButton path={"/static/surume-broadcast.xlsx"} />
 			</HStack>
 
 			{data.length === 0 ? null : (

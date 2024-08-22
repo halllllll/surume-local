@@ -1,2 +1,5 @@
 // TODO: union
-export type XlsxTemplateFilePath = "/static/surume.xlsx" | undefined | null;
+export type XlsxTemplateFilePath =
+	| "/static/surume-broadcast.xlsx"
+	| undefined
+	| null;

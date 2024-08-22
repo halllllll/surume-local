@@ -25,7 +25,7 @@ func SetRoutes(r *gin.Engine, db *sql.DB, logger *slog.Logger) {
 	delete := di.Init(db, logger)
 
 	restrited := api.Group("/util")
-	// restrited.Use(msalの認証を使ったミドルウェアを検討しているがアーキテクチャにどう組み込むのか悩み中)
+	// restrited.Use(msalの認証を使ったミドルウェアを検討しているがアーキテクチャにどう組み込むのか悩み中 ID Tokenを使う？)
 
 	{
 		api.GET("/entraid", entraIdCtrl.GetInfo)

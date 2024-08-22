@@ -134,7 +134,7 @@ func run(ctx context.Context) error {
 		}
 	}()
 
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 10)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	logger[string(config.AppLog)].Info("shutdown server...")
