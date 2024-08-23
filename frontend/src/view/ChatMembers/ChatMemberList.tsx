@@ -73,15 +73,13 @@ export const ChatMembersList: FC<{ data: ChatMemberParam }> = ({ data }) => {
 											<Button
 												type={"button"}
 												my={2}
-												isDisabled={!chatMembers.get(d.chatId)}
+												// isDisabled={!chatMembers.get(d.chatId)}
 												onClick={() => {
 													const dd = chatMembers.get(d.chatId);
 													if (dd) save({ data: dd, name: "a" });
 												}}
 											>
-												{!chatMembers.get(d.chatId)
-													? "-- ??? --"
-													: `Download (${d.outputName})`}
+												{`Download (${d.outputName})`}
 											</Button>
 										</Center>
 									</Suspense>

@@ -66,20 +66,6 @@ export const getChatMembers = async (
 		return res.data;
 	}
 
-	// skiptokenに対応したclientがないのでnextlinkを直接fetchする
-	// // const { instance } = useMsal();
-	// // const { accessToken: at } = await getAccessToken(instance);
-	// // const res = await fetch(p.nextLink, {
-	// // 	headers: {
-	// // 		Authorization: `Bearer ${at}`,
-	// // 	},
-	// // });
-	// // if (!res.ok) {
-	// // 	console.error(res.body);
-	// // 	throw res.body;
-	// // }
-	// // return await res.json();
-
 	// TODO: エラー時の型の設定方法がわからず未設定
 	const ret = useGraphNextLink<ChatMembers>(p.nextLink);
 

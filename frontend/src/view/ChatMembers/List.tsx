@@ -46,12 +46,18 @@ export const Members: FC<{
 	if (hasNextPage) {
 		fetchNextPage();
 	} else {
+		// TODO: ?
+		// setResult({ id: chatId, members: correctData });
 	}
 
 	useEffect(() => {
+		// if (isFetching || isPending || hasNextPage) {
+		// 	return;
+		// }
 		if (!isFetching && !isPending && !hasNextPage) {
 			setResult({ id: chatId, members: correctData });
 		}
+		// return () => setResult({ id: chatId, members: correctData });
 		return;
 	}, [isFetching, isPending, hasNextPage, chatId, setResult]);
 

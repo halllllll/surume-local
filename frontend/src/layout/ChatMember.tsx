@@ -22,8 +22,8 @@ export const ChatMemberRoot: FC = () => {
 			<Divider />
 			<Tabs size="md" variant="enclosed" my={3}>
 				<TabList>
-					<Tab>Single</Tab>
-					<Tab>Bulk</Tab>
+					<Tab>Rapid Fire</Tab>
+					<Tab>Bulk Shot</Tab>
 				</TabList>
 				<TabPanels>
 					<TabPanel>

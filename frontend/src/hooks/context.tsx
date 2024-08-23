@@ -7,7 +7,7 @@ import {
 	useMemo,
 } from "react";
 import { ContextError } from "@/errors/errors";
-import type { FormatedChatMessageData } from "@/types/types";
+import type { ChatMemberData, FormatedChatMessageData } from "@/types/types";
 import type { ChatsAPIResponse } from "@/service/chats/type";
 
 // context state
@@ -20,6 +20,7 @@ export type SurumeCtx = {
 	chat_messages: FormatedChatMessageData[];
 	chat_list_result: ChatsAPIResponse[];
 	// chat_member_sanitize_for_workbook: string; // TODO: type
+	chat_members: Map<string, ChatMemberData[]>;
 } | null;
 
 // context dispatch
@@ -57,6 +58,13 @@ type ctxAction =
 			type: "UpdateSendingChatStatus";
 			payload: {
 				data: FormatedChatMessageData;
+			};
+	  }
+	| {
+			type: "SetChatMembers";
+			payload: {
+				chatId: string;
+				data: Map<string, ChatMemberData[]>;
 			};
 	  };
 
@@ -103,6 +111,14 @@ const ctxReducer = (
 				chat_messages: lis,
 			};
 		}
+		case "SetChatMembers": {
+			// const { chatId, data } = action.payload;
+			// const n = data.get(chatId);
+			return {
+				...curData,
+				chat_members: action.payload.data,
+			};
+		}
 	}
 };
 
@@ -115,6 +131,7 @@ export const SurumeProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		redirect_uri_fqdn: "",
 		chat_messages: [],
 		chat_list_result: [],
+		chat_members: new Map(),
 	};
 	const [surumeState, surumeDispatch] = useReducer(ctxReducer, initial);
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
