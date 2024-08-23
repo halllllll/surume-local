@@ -3,7 +3,7 @@ openapi: "3.1.3"
 info:
   title: SURUME-Local
   description: surume local
-  version: "1.0.0"
+  version: "1.2.0"
 servers:
   - url: http://{host}:{port}/api
     description: "dev env (port number is defined code level)"
@@ -211,6 +211,44 @@ components:
       required:
         - to
         - content
+    ChatMember:
+      type: object
+      properties:
+        chatid:
+          type: string
+        workbookname:
+          type: string
+      required:
+        - chatid
+        - workbookname
+    ValidateBroadcast:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+      required:
+        - success
+        - data
+    ValidateChatMember:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMember"
+      required:
+        - success
+        - data
+
+
 
   requestBodies:
     DeleteInitRequestBody:
@@ -242,7 +280,14 @@ components:
       content:
         multipart/form-data:
           schema:
-            $ref: "#/components/schemas/XlsxFile"
+            type: object
+            properties:
+              xlsx:
+                $ref: "#/components/schemas/XlsxFile"
+              target:
+                type: string
+              type:
+                type: string
 
   responses:
     DeleteTargetResponse:
@@ -323,18 +368,10 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                default: true
-              data:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ChatMessage"
-            required:
-              - success
-              - data
+            oneOf:
+              - $ref: "#/components/schemas/ValidateBroadcast"
+              - $ref: "#/components/schemas/ValidateChatMember"
+
     500InternalServerError:
       description: internal server error
       content:

@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Button, Link } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import type { XlsxTemplateFilePath } from "./path";
 
 export const DownloadTemplateXlsxButton: FC<{ path: XlsxTemplateFilePath }> = ({
@@ -8,10 +8,8 @@ export const DownloadTemplateXlsxButton: FC<{ path: XlsxTemplateFilePath }> = ({
 	// TODO: null必要？
 	if (!path) return null;
 	return (
-		<Button>
-			<Link href={path} download={true}>
-				Download Template File (xlsx)
-			</Link>
+		<Button as={"a"} href={path} download={true} w={"fit-content"}>
+			Download Template File (xlsx)
 		</Button>
 	);
 };

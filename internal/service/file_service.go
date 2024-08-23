@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"mime/multipart"
 	"net/http"
 	"path/filepath"
 	"slices"
@@ -16,7 +17,8 @@ import (
 
 // TODO: とりあえず最小限のバリデーションだけ実装する
 type FileServicer interface {
-	CheckTemplate(context.Context, http.Request) ([]dto.ChatMessage, error)
+	CheckBroadcastTemplate(context.Context, http.Request) ([]dto.ChatMessage, error)
+	CheckChatmembersTemplate(context.Context, http.Request) ([]dto.ChatMembersBody, error)
 }
 
 type fileServicer struct {
@@ -28,22 +30,30 @@ func NewFileServicer(repo repository.Filer, tx transaction.Transaction) FileServ
 	return &fileServicer{repo, tx}
 }
 
-func (fs *fileServicer) CheckTemplate(ctx context.Context, req http.Request) ([]dto.ChatMessage, error) {
-	file, header, err := req.FormFile(dto.TemplateXlsxFormDataKey)
+func retrieve_xlsx(formDataKey dto.FormDataKey, req http.Request) (multipart.File, func(), error) {
+	file, header, err := req.FormFile(string(formDataKey))
 	if err != nil {
-		return nil, err
+		return nil, nil, fmt.Errorf("no such formdata key")
 	}
 
-	defer file.Close()
+	close := func() {
+		file.Close()
+	}
 
 	if header.Header.Get("Content-Type") != dto.XlsxMimeType {
-		return nil, fmt.Errorf("invlid mime")
+		return nil, close, fmt.Errorf("invlid mime")
 	}
 
 	fileName := header.Filename
 	if filepath.Ext(fileName) != ".xlsx" {
-		return nil, fmt.Errorf("invalid file extension")
+		return nil, close, fmt.Errorf("invalid file extension")
 	}
+	return file, close, nil
+}
+
+func (fs *fileServicer) CheckBroadcastTemplate(ctx context.Context, req http.Request) ([]dto.ChatMessage, error) {
+	file, close, err := retrieve_xlsx(dto.TemplateXlsxFormDataKey, req)
+	defer close()
 
 	excel, err := excelize.OpenReader(file)
 	if err != nil {
@@ -67,8 +77,8 @@ func (fs *fileServicer) CheckTemplate(ctx context.Context, req http.Request) ([]
 	}
 
 	// upto
-	if len(rows)-1 > dto.MaximumRowCount {
-		return nil, fmt.Errorf("Over Maximum Count: %d", dto.MaximumRowCount)
+	if len(rows)-1 > dto.MaxBroadcast {
+		return nil, fmt.Errorf("Over Maximum Count: %d", dto.MaxBroadcast)
 	}
 
 	// TODO: 必要なデータに整形して返す
@@ -95,4 +105,10 @@ func (fs *fileServicer) CheckTemplate(ctx context.Context, req http.Request) ([]
 	}
 	// TODO: いったん全部送ってみる
 	return res, nil
+}
+
+func (fs *fileServicer) CheckChatmembersTemplate(ctx context.Context, req http.Request) ([]dto.ChatMembersBody, error) {
+	// valid sheet name
+
+	return nil, nil
 }

@@ -1,7 +1,7 @@
 import { ErrorFallback } from "@/errors/ErrorFallback";
 import type { ChatMemberParam } from "@/scheme/chatMember";
 import type { ChatMemberData } from "@/types/types";
-import { Box, Text, Button, Center, Flex } from "@chakra-ui/react";
+import { Box, Text, Button, Center } from "@chakra-ui/react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
 import { Suspense, useState, type FC } from "react";

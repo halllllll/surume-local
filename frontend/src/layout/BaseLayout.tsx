@@ -1,7 +1,7 @@
 import { useRef, type FC, useState } from "react";
 import { Header } from "@/layout/Header";
 import { Outlet } from "react-router-dom";
-import { Box, Container, Flex, useDisclosure, VStack } from "@chakra-ui/react";
+import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
 import DrawerRoot from "@/layout/DrawerRoot";
 import HeaderMenu from "@/component/button/HeaderMenuButton";
 import { EntraIdModal } from "@/view/modal/entraidinfo/modal";

@@ -3,8 +3,8 @@ import {
 	Box,
 	Button,
 	Divider,
+	Flex,
 	Heading,
-	HStack,
 	useToast,
 } from "@chakra-ui/react";
 import { useRef, type FC } from "react";
@@ -85,12 +85,12 @@ export const Fire: FC = () => {
 			</Heading>
 			<Divider />
 
-			<HStack my={3} spacing={10}>
+			<Flex my={3} gap={10} overflowWrap={"anywhere"}>
 				<UploadXlsxFile />
 				{/* TODO: 未実装 */}
 				<Button isDisabled={true}>{"From Log (Under Construction)"}</Button>
 				<DownloadTemplateXlsxButton path={"/static/surume-broadcast.xlsx"} />
-			</HStack>
+			</Flex>
 
 			{data.length === 0 ? null : (
 				<>

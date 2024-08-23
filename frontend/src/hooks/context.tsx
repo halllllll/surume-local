@@ -19,6 +19,7 @@ export type SurumeCtx = {
 	accessToken: string;
 	chat_messages: FormatedChatMessageData[];
 	chat_list_result: ChatsAPIResponse[];
+	// chat_member_sanitize_for_workbook: string; // TODO: type
 } | null;
 
 // context dispatch

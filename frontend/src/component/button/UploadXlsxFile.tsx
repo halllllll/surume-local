@@ -24,8 +24,13 @@ export const UploadXlsxFile: FC = () => {
 
 			uploadFileMutate(
 				// TODO: IDトークンの検証はサーバー側では未実装
-				// biome-ignore lint/style/noNonNullAssertion: <explanation>
-				{ file, token: accountInfo!.idToken as string },
+				{
+					file,
+					token: accountInfo?.idToken as string,
+					type: "validate",
+					target: "broadcast",
+					path: "/api/util/validateTemplate",
+				},
 				{
 					onSettled: () => {},
 					onSuccess: (result) => {
@@ -64,6 +69,7 @@ export const UploadXlsxFile: FC = () => {
 			);
 		}
 	};
+
 	return (
 		<Stack direction="row" spacing={4} align="center">
 			<Input

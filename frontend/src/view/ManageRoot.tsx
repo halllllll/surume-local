@@ -24,7 +24,7 @@ export const ManageRoot: FC = () => {
 							<ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
 								<Suspense fallback={<b>Loading...</b>}>
 									<Link to={"/chats_list"}>
-										<BaseCard2>Belonging Chats List</BaseCard2>
+										<BaseCard2>Belonging Chats</BaseCard2>
 									</Link>
 									<Link to={"/fire"}>
 										<BaseCard2>BroadCast</BaseCard2>
