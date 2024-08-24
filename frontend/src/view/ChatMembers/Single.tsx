@@ -1,7 +1,5 @@
 import { useChatMembarsForm } from "@/scheme/chatMember";
 import {
-	Heading,
-	Divider,
 	Box,
 	Button,
 	HStack,
@@ -13,8 +11,10 @@ import {
 	Center,
 } from "@chakra-ui/react";
 import type { FC } from "react";
-import { useFieldArray, FormProvider } from "react-hook-form";
+import { useFieldArray, FormProvider, Controller } from "react-hook-form";
 import { ChatMembersList } from "./ChatMemberList";
+import { useSurumeContext } from "@/hooks/context";
+import { Select } from "chakra-react-select";
 
 export const SingleView: FC = () => {
 	const { targetChatId, methods, onSubmit, isTriggered, setIsTriggerd } =
@@ -25,11 +25,23 @@ export const SingleView: FC = () => {
 		name: "chatMembers",
 	});
 
+	const { surumeCtx } = useSurumeContext();
+
 	return (
 		<>
-			<Box py={3} m={3}>
-				<FormProvider {...methods}>
-					<Box overflowX="auto" overflowY="auto" maxHeight={600} p={5}>
+			<Button
+				type={"button"}
+				my={2}
+				onClick={() => {
+					methods.reset();
+					setIsTriggerd(false);
+				}}
+			>
+				reset
+			</Button>
+			{!isTriggered && (
+				<Box overflowX="auto" overflowY="auto">
+					<FormProvider {...methods}>
 						<form onSubmit={methods.handleSubmit(onSubmit)}>
 							{fields.map((chat, idx) => {
 								return (
@@ -39,10 +51,64 @@ export const SingleView: FC = () => {
 												<Flex alignItems={"start"}>
 													<FormLabel>chat id</FormLabel>
 												</Flex>
-												<Input
-													isDisabled={isTriggered}
-													{...methods.register(`chatMembers.${idx}.chatId`)}
-												/>
+												{surumeCtx.chat_list_result ? (
+													// TODO: 現状あんまやる意味なさそうなのでselect boxのvirtualize, window化はしてない
+													<Controller
+														control={methods.control}
+														name={`chatMembers.${idx}.chatId`}
+														render={({ field, fieldState, formState }) => (
+															<Select
+																{...fieldState}
+																{...formState}
+																// fieldのうち以下を指定するとoptionの型などでエラーになる
+																// inputRef={field.ref}
+																// value={field.value}
+																{...methods.register(
+																	`chatMembers.${idx}.chatId`,
+																)}
+																name={field.name}
+																onBlur={field.onBlur}
+																menuPlacement={"auto"}
+																menuPortalTarget={document.body}
+																onChange={(e) => {
+																	// resultの見た目用
+																	methods.setValue(
+																		`chatMembers.${idx}.chatName`,
+																		e?.label ?? "",
+																		{ shouldValidate: true },
+																	);
+																	// save as name input用
+																	methods.setValue(
+																		`chatMembers.${idx}.outputName`,
+																		e?.label ?? "",
+																		{ shouldValidate: true },
+																	);
+																	// 実際の値用
+																	methods.setValue(
+																		`chatMembers.${idx}.chatId`,
+																		e?.value ?? "",
+																		{ shouldValidate: true },
+																	);
+																}}
+																options={surumeCtx.chat_list_result?.result.map(
+																	(v) => {
+																		return {
+																			label: v.topic ?? v.id,
+																			value: v.id,
+																		};
+																	},
+																)}
+																isSearchable={true}
+																isDisabled={isTriggered}
+															/>
+														)}
+													/>
+												) : (
+													<Input
+														isDisabled={isTriggered}
+														{...methods.register(`chatMembers.${idx}.chatId`)}
+													/>
+												)}
 												<FormErrorMessage>
 													{chatErrors?.[idx]?.chatId?.message}
 												</FormErrorMessage>
@@ -118,13 +184,12 @@ export const SingleView: FC = () => {
 								</Flex>
 							</Flex>
 						</form>
-					</Box>
-				</FormProvider>
-			</Box>
-			<Divider />
+					</FormProvider>
+				</Box>
+			)}
+
 			{methods.formState.isValid && isTriggered && (
 				<>
-					<Heading>Result</Heading>
 					<ChatMembersList data={targetChatId} />
 				</>
 			)}

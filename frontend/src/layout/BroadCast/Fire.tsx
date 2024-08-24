@@ -1,4 +1,4 @@
-import { UploadXlsxFile } from "@/component/button/UploadXlsxFile";
+import { UploadXlsxFile } from "@/component/button/UploadBroadcastXlsx";
 import {
 	Box,
 	Button,

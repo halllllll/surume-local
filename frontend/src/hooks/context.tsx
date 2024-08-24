@@ -18,7 +18,10 @@ export type SurumeCtx = {
 	redirect_uri_fqdn: string;
 	accessToken: string;
 	chat_messages: FormatedChatMessageData[];
-	chat_list_result: ChatsAPIResponse[];
+	chat_list_result: {
+		count: number | null | undefined;
+		result: NonNullable<ChatsAPIResponse["value"]>;
+	} | null;
 	// chat_member_sanitize_for_workbook: string; // TODO: type
 	chat_members: Map<string, ChatMemberData[]>;
 } | null;
@@ -52,7 +55,10 @@ type ctxAction =
 	  }
 	| {
 			type: "SetBelongingChat";
-			payload: ChatsAPIResponse[];
+			payload: {
+				count: number | null | undefined;
+				result: NonNullable<ChatsAPIResponse["value"]>;
+			};
 	  }
 	| {
 			type: "UpdateSendingChatStatus";
@@ -112,8 +118,6 @@ const ctxReducer = (
 			};
 		}
 		case "SetChatMembers": {
-			// const { chatId, data } = action.payload;
-			// const n = data.get(chatId);
 			return {
 				...curData,
 				chat_members: action.payload.data,
@@ -130,7 +134,7 @@ export const SurumeProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		redirect_uri_localhost_port: "",
 		redirect_uri_fqdn: "",
 		chat_messages: [],
-		chat_list_result: [],
+		chat_list_result: null,
 		chat_members: new Map(),
 	};
 	const [surumeState, surumeDispatch] = useReducer(ctxReducer, initial);

@@ -32,24 +32,15 @@ export const useGetChatsPaginate = () => {
 			return getNextChats(pageParam);
 		},
 		select: (data) => {
-			const result = data.pages.map((v) => {
-				return v.value?.map((vv) => {
-					return {
-						type: vv.chatType,
-						id: vv.id,
-						topic: vv.topic,
-						createdat: vv.createdDateTime,
-						updatedat: vv.lastUpdatedDateTime,
-						url: vv.webUrl,
-					};
-				});
-			});
+			const result = data.pages
+				.flatMap((v) => v.value)
+				.filter((item): item is NonNullable<typeof item> => item !== undefined);
 
 			return {
 				count: data.pages
 					.map((v) => v["@odata.count"])
 					.reduce((pre, cur) => pre && cur && pre + cur),
-				result: result.flat(),
+				result: result,
 			};
 		},
 		getNextPageParam: (lastPage: ChatsAPIResponse) => {
@@ -73,24 +64,6 @@ export const useGetChatsPaginate = () => {
 };
 
 export const useGetChatMembers = (param: ChatMemberParamWithNextLink) => {
-	// const { data, refetch, status, isPending, isFetching, error } =
-	// 	useSuspenseQuery<ChatMembers, GraphError>({
-	// 		networkMode: "offlineFirst",
-	// 		retry: (failureCount, error) => {
-	// 			console.warn(error);
-	// 			if (error.code === "NotFound") {
-	// 				return false;
-	// 			}
-	// 			return failureCount < 3;
-	// 		},
-	// 		staleTime: 300,
-	// 		gcTime: 20,
-	// 		retryOnMount: true,
-	// 		queryKey: chatKeys.members(chatId),
-	// 		queryFn: () => getChatMembers(chatId),
-	// 	});
-
-	// return { data, refetch, isPending, isFetching, status, error };
 	const {
 		data,
 		refetch,

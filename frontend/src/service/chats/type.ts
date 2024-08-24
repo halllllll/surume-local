@@ -6,6 +6,16 @@ import type { components } from "@/types/oas";
 export type ChatsAPIResponse =
 	components["responses"]["microsoft.graph.chatCollectionResponse"]["content"]["application/json"];
 
+// type b = Pick<
+// 	NonNullable<ChatsAPIResponse["value"]>[number],
+// 	| "id"
+// 	| "chatType"
+// 	| "topic"
+// 	| "createdDateTime"
+// 	| "lastUpdatedDateTime"
+// 	| "webUrl"
+// >;
+
 export type ChatMembers =
 	components["responses"]["microsoft.graph.conversationMemberCollectionResponse"]["content"]["application/json"];
 

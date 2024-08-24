@@ -57,6 +57,7 @@ export const ChatMemberSchema = yup.object({
 							return !ng.some((e) => value.includes(e));
 						},
 					),
+				chatName: yup.string().nullable(),
 			}),
 		)
 		.required()

@@ -1,7 +1,15 @@
 import { ErrorFallback } from "@/errors/ErrorFallback";
 import type { ChatMemberParam } from "@/scheme/chatMember";
 import type { ChatMemberData } from "@/types/types";
-import { Box, Text, Button, Center } from "@chakra-ui/react";
+import {
+	Box,
+	Text,
+	Button,
+	Center,
+	Heading,
+	Flex,
+	Spacer,
+} from "@chakra-ui/react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
 import { Suspense, useState, type FC } from "react";
@@ -10,6 +18,7 @@ import { Members } from "./List";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
 
+// each download (NOT merge one excel file)
 const save = async ({
 	data,
 	name: sheetName,
@@ -21,7 +30,7 @@ const save = async ({
 		{ header: "id", key: "id" },
 		{ header: "username", key: "username" },
 		{ header: "role", key: "role" },
-		{ header: "from", key: "from" },
+		{ header: "since", key: "since" },
 	];
 
 	for (const v of data) {
@@ -29,7 +38,7 @@ const save = async ({
 			id: v.email,
 			username: v.displayName,
 			role: v.roles.join(", "),
-			from: v.visibleHistoryStartDateTime,
+			since: v.visibleHistoryStartDateTime,
 		});
 	}
 
@@ -37,7 +46,9 @@ const save = async ({
 	saveAs(new Blob([buffer]), `chatmembers-${sheetName}.xlsx`);
 };
 
-export const ChatMembersList: FC<{ data: ChatMemberParam }> = ({ data }) => {
+export const ChatMembersList: FC<{
+	data: ChatMemberParam;
+}> = ({ data }) => {
 	const [chatMembers, setChatMembers] = useState<Map<string, ChatMemberData[]>>(
 		new Map(),
 	);
@@ -53,14 +64,29 @@ export const ChatMembersList: FC<{ data: ChatMemberParam }> = ({ data }) => {
 		});
 	};
 
+	// TODO:
+	const saves = () => {
+		console.log(console.dir(chatMembers));
+	};
+
 	return (
 		<>
+			<Flex my={2} gap={4}>
+				<Heading>Result</Heading>
+				<Spacer />
+				<Button
+					onClick={() => saves()}
+				>{`TODO: Download All ( ${data.chatMembers.length} each files)`}</Button>
+				<Spacer />
+			</Flex>
+
 			{data.chatMembers.map((d) => {
 				return (
-					<Box key={d.chatId}>
-						<Center>
-							<Text as={"b"}>{`target: ${d.outputName}`}</Text>
-						</Center>
+					<Box key={d.chatId} my={4}>
+						<Text
+							as={"b"}
+							fontWeight={"20em"}
+						>{`target: ${d.chatName ?? d.outputName}`}</Text>
 						<QueryErrorResetBoundary>
 							{({ reset }) => (
 								<ErrorBoundary
@@ -76,7 +102,7 @@ export const ChatMembersList: FC<{ data: ChatMemberParam }> = ({ data }) => {
 												// isDisabled={!chatMembers.get(d.chatId)}
 												onClick={() => {
 													const dd = chatMembers.get(d.chatId);
-													if (dd) save({ data: dd, name: "a" });
+													if (dd) save({ data: dd, name: d.outputName });
 												}}
 											>
 												{`Download (${d.outputName})`}

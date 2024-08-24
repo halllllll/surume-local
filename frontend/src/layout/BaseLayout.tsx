@@ -71,7 +71,7 @@ export const BaseLayout: FC = () => {
 					<DrawerRoot isOpen={isDrawerOpen} onClose={onDrowerClose} />
 				)}
 				<Greet />
-				<Box mx={10} pb={20}>
+				<Box mx={10}>
 					<Outlet />
 				</Box>
 			</Container>

@@ -1,59 +1,32 @@
 import { ErrorFallback } from "@/errors/ErrorFallback";
 import { useGetChatsPaginate } from "@/service/chats";
-import {
-	Box,
-	Button,
-	Flex,
-	Link,
-	Spinner,
-	Table,
-	Tbody,
-	Td,
-	Text,
-	Th,
-	Thead,
-	Tr,
-	useColorModeValue,
-} from "@chakra-ui/react";
-import { Suspense, useState, type FC } from "react";
+import { Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Suspense, useEffect, type FC } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import Excel from "exceljs";
-import { saveAs } from "file-saver";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ChatListTable, save } from "./ChatListTable";
+import { useSurumeContext } from "@/hooks/context";
 
 const DownloadLink: FC = () => {
 	const { data, isPending, hasNextPage, fetchNextPage, error } =
 		useGetChatsPaginate();
+	const { setSurumeCtx } = useSurumeContext();
 	if (!error) console.error(error);
-	const [onSave, setOnSave] = useState<boolean>(false);
+
 	if (hasNextPage) {
 		fetchNextPage();
 	} else {
-		// TODO: Contextに保存
-		// setSurumeCtx({ type: "SetBelongingChat", payload: data });
 	}
-	const bg = useColorModeValue("white", "gray.800");
 
-	const save = async () => {
-		setOnSave(false);
-		const workbook = new Excel.Workbook();
-		workbook.created = new Date();
-		const worksheet = workbook.addWorksheet("chats");
-		worksheet.columns = [
-			{ header: "name", key: "topic" },
-			{ header: "id", key: "id" },
-			{ header: "type", key: "type" },
-			{ header: "url", key: "url" },
-		];
-		worksheet.addRows(
-			data.result.map((v) => {
-				return { topic: v?.topic, id: v?.id, type: v?.type, url: v?.url };
-			}),
-		);
-		const buffer = await workbook.xlsx.writeBuffer();
-		saveAs(new Blob([buffer]), "allchats.xlsx");
-		setOnSave(true);
-	};
+	useEffect(() => {
+		if (!hasNextPage) {
+			setSurumeCtx({
+				type: "SetBelongingChat",
+				payload: { count: data.count, result: data.result },
+			});
+		}
+	}, [setSurumeCtx, hasNextPage, data]);
+
 	const count = data.count;
 	return (
 		<Box>
@@ -68,9 +41,7 @@ const DownloadLink: FC = () => {
 						<Text>{`done count: ${count}`}</Text>
 						{!hasNextPage ? (
 							<>
-								<Button onClick={save} disabled={onSave}>
-									download xlsx
-								</Button>
+								<Button onClick={() => save(data.result)}>download xlsx</Button>
 							</>
 						) : (
 							<Box px={4}>
@@ -78,50 +49,7 @@ const DownloadLink: FC = () => {
 							</Box>
 						)}
 					</Flex>
-					<Box
-						width="100%" /*overflowX="auto"*/
-						overflowY="auto"
-						maxHeight={500}
-					>
-						<Table size={"sm"}>
-							<Thead position={"sticky"} top="0" bgColor={bg}>
-								<Tr>
-									<Th scope="col">No.</Th>
-									<Th scope="col" minW={"80px"}>
-										Type
-									</Th>
-									<Th scope="col" minW={"200px"}>
-										ID
-									</Th>
-									<Th scope="col">topic</Th>
-									<Th scope="col">createdat</Th>
-									<Th scope="col">updatedat</Th>
-									<Th scope="col">url</Th>
-								</Tr>
-							</Thead>
-							<Tbody>
-								{data.result.map((v, idx) => {
-									return (
-										<Tr key={v?.id}>
-											<Td>{idx + 1}</Td>
-											<Td overflowWrap={"anywhere"}>{v?.type}</Td>
-											<Td overflowWrap={"anywhere"}>{v?.id}</Td>
-											<Td>{v?.topic}</Td>
-											<Td>{v?.createdat}</Td>
-											<Td>{v?.updatedat}</Td>
-											{v?.url && (
-												<Td>
-													<Link href={v.url} isExternal>
-														{v.url}
-													</Link>
-												</Td>
-											)}
-										</Tr>
-									);
-								})}
-							</Tbody>
-						</Table>
-					</Box>
+					<ChatListTable data={data.result} />
 				</>
 			)}
 		</Box>
