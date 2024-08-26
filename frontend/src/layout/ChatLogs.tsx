@@ -1,4 +1,4 @@
-import { ChatLogSchema, type ChatLogsParams } from "@/scheme/chatLogs";
+import { useChatLogForm } from "@/scheme/chatLogs";
 import { ChatLogList } from "@/view/ChatLogList";
 
 import {
@@ -14,48 +14,13 @@ import {
 	HStack,
 	Spacer,
 } from "@chakra-ui/react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useState, type FC } from "react";
-import {
-	FormProvider,
-	type SubmitHandler,
-	useFieldArray,
-	useForm,
-} from "react-hook-form";
+import type { FC } from "react";
+import { FormProvider } from "react-hook-form";
 
 export const ChatLogs: FC = () => {
-	const defaultVal: ChatLogsParams = {
-		chats: [
-			{
-				outputName: "",
-				chatId: "",
-			},
-		],
-		dateFrom: new Date(),
-		dateTo: new Date(),
-	};
-	const [targetData, setTargetData] = useState<ChatLogsParams>(defaultVal);
-	const [btnState, updateBtnState] = useState<boolean>(false);
-	const methods = useForm<ChatLogsParams>({
-		mode: "onSubmit",
-		criteriaMode: "all",
-		defaultValues: defaultVal,
-		resolver: yupResolver<ChatLogsParams>(ChatLogSchema),
-	});
-
-	// TODO: とりあえず複数追加できるようにしたが、複数のinfinitequeryの投げ方と結果の受け取り方のいい実装がわからず、追加を実装していない。
-	const { fields /*append, _remove*/ } = useFieldArray({
-		control: methods.control,
-		name: "chats",
-	});
+	const { methods, onSubmit, fields, isTriggered, logData } = useChatLogForm();
 
 	const chatErrors = methods.formState.errors.chats;
-
-	const onSubmit: SubmitHandler<ChatLogsParams> = (formData) => {
-		updateBtnState(false);
-		setTargetData(formData);
-		updateBtnState(true);
-	};
 	return (
 		<>
 			<Heading size={"sm"} my={3}>
@@ -136,13 +101,13 @@ export const ChatLogs: FC = () => {
 					</form>
 				</FormProvider>
 			</Box>
-			{btnState && (
+			{isTriggered && (
 				<>
 					<Divider />
 					<ChatLogList
-						chats={targetData.chats}
-						dateFrom={targetData.dateFrom}
-						dateTo={targetData.dateTo}
+						chats={logData.chats}
+						dateFrom={logData.dateFrom}
+						dateTo={logData.dateTo}
 					/>
 				</>
 			)}
