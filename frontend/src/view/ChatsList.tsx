@@ -1,16 +1,25 @@
 import { ErrorFallback } from "@/errors/ErrorFallback";
 import { useGetChatsPaginate } from "@/service/chats";
-import { Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Center,
+	Flex,
+	HStack,
+	Spinner,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
 import { Suspense, useEffect, type FC } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { ChatListTable, save } from "./ChatListTable";
+import { ChatListTable, save as saveXlsx } from "./ChatListTable";
 import { useSurumeContext } from "@/hooks/context";
 
 const DownloadLink: FC = () => {
+	const { setSurumeCtx } = useSurumeContext();
 	const { data, isPending, hasNextPage, fetchNextPage, error } =
 		useGetChatsPaginate();
-	const { setSurumeCtx } = useSurumeContext();
 	if (!error) console.error(error);
 
 	if (hasNextPage) {
@@ -41,7 +50,9 @@ const DownloadLink: FC = () => {
 						<Text>{`done count: ${count}`}</Text>
 						{!hasNextPage ? (
 							<>
-								<Button onClick={() => save(data.result)}>download xlsx</Button>
+								<Button onClick={() => saveXlsx(data.result)}>
+									download xlsx
+								</Button>
 							</>
 						) : (
 							<Box px={4}>
@@ -57,6 +68,37 @@ const DownloadLink: FC = () => {
 };
 
 export const ChatListContent: FC = () => {
+	const { surumeCtx, setSurumeCtx } = useSurumeContext();
+
+	if (surumeCtx.chat_list_result !== null) {
+		return (
+			<>
+				<Center mb={4}>
+					<VStack gap={2}>
+						<Text>you've already had data</Text>
+						<Button
+							onClick={() => saveXlsx(surumeCtx.chat_list_result?.result)}
+						>
+							download xlsx
+						</Button>
+						<HStack>
+							<Text>{"or reset 👉"}</Text>
+							<Button
+								colorScheme={"pink"}
+								onClick={() => {
+									setSurumeCtx({ type: "ResetBelongingChat" });
+								}}
+							>
+								refetch
+							</Button>
+						</HStack>
+					</VStack>
+				</Center>
+				<ChatListTable data={surumeCtx.chat_list_result.result} />
+			</>
+		);
+	}
+
 	return (
 		<Box>
 			<QueryErrorResetBoundary>

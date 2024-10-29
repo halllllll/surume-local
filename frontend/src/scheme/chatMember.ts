@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 
-export const ChatMemberSchema = yup.object({
+const ChatMemberSchema = yup.object({
 	chatMembers: yup
 		.array(
 			yup.object().shape({
@@ -79,6 +79,7 @@ export const useChatMembarsForm = () => {
 				{
 					chatId: "",
 					outputName: "",
+					chatName: "",
 				},
 			],
 		},
@@ -86,6 +87,7 @@ export const useChatMembarsForm = () => {
 	});
 
 	const onSubmit: SubmitHandler<ChatMemberParam> = (formData) => {
+		console.log(formData);
 		setIsTriggerd(true);
 		setTargetChatId(formData);
 	};

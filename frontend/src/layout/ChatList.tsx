@@ -4,6 +4,7 @@ import { useState, type FC } from "react";
 
 export const ChatList: FC = () => {
 	const [go, setGo] = useState<boolean>(false);
+
 	return (
 		<Box>
 			{!go ? (

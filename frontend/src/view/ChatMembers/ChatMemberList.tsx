@@ -23,6 +23,8 @@ const save = async ({
 	data,
 	name: sheetName,
 }: { data: ChatMemberData[]; name: string }) => {
+	console.info("わたってくるデータがどんな形をしている？");
+	console.dir(data);
 	const workbook = new Excel.Workbook();
 	workbook.created = new Date();
 	const worksheet = workbook.addWorksheet(sheetName);
@@ -38,7 +40,7 @@ const save = async ({
 			id: v.email,
 			username: v.displayName,
 			role: v.roles.join(", "),
-			since: v.visibleHistoryStartDateTime,
+			since: v.visibleHistoryStartDateTime, // TODO: レスポンスのJSOMをみても`"0001-01-01T00:00:00Z"`とかになってて全然嬉しそうなデータじゃない
 		});
 	}
 
@@ -65,7 +67,7 @@ export const ChatMembersList: FC<{
 	};
 
 	// TODO:
-	const saves = () => {
+	const saveAll = () => {
 		console.log(console.dir(chatMembers));
 	};
 
@@ -75,7 +77,7 @@ export const ChatMembersList: FC<{
 				<Heading>Result</Heading>
 				<Spacer />
 				<Button
-					onClick={() => saves()}
+					onClick={() => saveAll()}
 				>{`TODO: Download All ( ${data.chatMembers.length} each files)`}</Button>
 				<Spacer />
 			</Flex>

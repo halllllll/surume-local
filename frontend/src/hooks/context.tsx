@@ -61,6 +61,9 @@ type ctxAction =
 			};
 	  }
 	| {
+			type: "ResetBelongingChat";
+	  }
+	| {
 			type: "UpdateSendingChatStatus";
 			payload: {
 				data: FormatedChatMessageData;
@@ -108,6 +111,9 @@ const ctxReducer = (
 				...curData,
 				chat_list_result: action.payload,
 			};
+		}
+		case "ResetBelongingChat": {
+			return { ...curData, chat_list_result: null };
 		}
 		case "UpdateSendingChatStatus": {
 			const lis = curData.chat_messages;

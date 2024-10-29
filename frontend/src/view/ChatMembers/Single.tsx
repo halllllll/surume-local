@@ -9,40 +9,84 @@ import {
 	Input,
 	FormErrorMessage,
 	Center,
+	Spacer,
 } from "@chakra-ui/react";
 import type { FC } from "react";
-import { useFieldArray, FormProvider, Controller } from "react-hook-form";
+import { useFieldArray, FormProvider } from "react-hook-form";
 import { ChatMembersList } from "./ChatMemberList";
 import { useSurumeContext } from "@/hooks/context";
-import { Select } from "chakra-react-select";
+import { SelectInputController } from "./SelectInputController";
 
 export const SingleView: FC = () => {
 	const { targetChatId, methods, onSubmit, isTriggered, setIsTriggerd } =
 		useChatMembarsForm();
 	const chatErrors = methods.formState.errors.chatMembers;
-	const { fields, append, remove } = useFieldArray({
+	const { fields, append, remove, replace } = useFieldArray({
 		control: methods.control,
 		name: "chatMembers",
 	});
 
 	const { surumeCtx } = useSurumeContext();
 
+	const setAllCandidateData = () => {
+		methods.reset();
+		remove();
+		if (surumeCtx.chat_list_result === null) return;
+
+		const values = surumeCtx.chat_list_result.result.map((res, idx) => {
+			return {
+				chatId: res.id ?? "",
+				chatName: res.topic ?? "",
+				outputName: res.topic ?? res.id ?? "",
+			};
+		});
+		// ちょっとテストで絞ってる
+		replace(values.splice(0, 4));
+		methods.trigger();
+	};
+
 	return (
 		<>
-			<Button
-				type={"button"}
-				my={2}
-				onClick={() => {
-					methods.reset();
-					setIsTriggerd(false);
-				}}
-			>
-				reset
-			</Button>
+			<Flex>
+				<Button
+					type={"button"}
+					my={2}
+					onClick={() => {
+						methods.reset();
+						setIsTriggerd(false);
+					}}
+				>
+					reset
+				</Button>
+
+				{(surumeCtx.chat_list_result && !isTriggered) ?? (
+					<>
+						<Spacer />
+						<Center>
+							<Button colorScheme={"pink"} onClick={setAllCandidateData}>
+								{" "}
+								TAKE ALL{" "}
+							</Button>
+						</Center>
+						<Spacer />
+					</>
+				)}
+			</Flex>
 			{!isTriggered && (
 				<Box overflowX="auto" overflowY="auto">
 					<FormProvider {...methods}>
 						<form onSubmit={methods.handleSubmit(onSubmit)}>
+							{fields.length >= 10 && (
+								<Flex direction={"row-reverse"}>
+									<Button
+										type={"submit"}
+										isDisabled={!methods.formState.isValid || isTriggered}
+										// isLoading={isPending}
+									>
+										Challenge
+									</Button>
+								</Flex>
+							)}
 							{fields.map((chat, idx) => {
 								return (
 									<Box key={chat.id}>
@@ -52,56 +96,9 @@ export const SingleView: FC = () => {
 													<FormLabel>chat id</FormLabel>
 												</Flex>
 												{surumeCtx.chat_list_result ? (
-													// TODO: 現状あんまやる意味なさそうなのでselect boxのvirtualize, window化はしてない
-													<Controller
-														control={methods.control}
-														name={`chatMembers.${idx}.chatId`}
-														render={({ field, fieldState, formState }) => (
-															<Select
-																{...fieldState}
-																{...formState}
-																// fieldのうち以下を指定するとoptionの型などでエラーになる
-																// inputRef={field.ref}
-																// value={field.value}
-																{...methods.register(
-																	`chatMembers.${idx}.chatId`,
-																)}
-																name={field.name}
-																onBlur={field.onBlur}
-																menuPlacement={"auto"}
-																menuPortalTarget={document.body}
-																onChange={(e) => {
-																	// resultの見た目用
-																	methods.setValue(
-																		`chatMembers.${idx}.chatName`,
-																		e?.label ?? "",
-																		{ shouldValidate: true },
-																	);
-																	// save as name input用
-																	methods.setValue(
-																		`chatMembers.${idx}.outputName`,
-																		e?.label ?? "",
-																		{ shouldValidate: true },
-																	);
-																	// 実際の値用
-																	methods.setValue(
-																		`chatMembers.${idx}.chatId`,
-																		e?.value ?? "",
-																		{ shouldValidate: true },
-																	);
-																}}
-																options={surumeCtx.chat_list_result?.result.map(
-																	(v) => {
-																		return {
-																			label: v.topic ?? v.id,
-																			value: v.id,
-																		};
-																	},
-																)}
-																isSearchable={true}
-																isDisabled={isTriggered}
-															/>
-														)}
+													<SelectInputController
+														idx={idx}
+														isTriggered={isTriggered}
 													/>
 												) : (
 													<Input
@@ -124,8 +121,7 @@ export const SingleView: FC = () => {
 													{chatErrors?.[idx]?.outputName?.message ?? ""}
 												</FormErrorMessage>
 											</FormControl>
-
-											<Flex align={"end"}>
+											<Flex align={"flex-end"}>
 												<Box h={"fit-content"}>
 													{fields.length > 1 && !isTriggered && (
 														<Button
@@ -187,7 +183,6 @@ export const SingleView: FC = () => {
 					</FormProvider>
 				</Box>
 			)}
-
 			{methods.formState.isValid && isTriggered && (
 				<>
 					<ChatMembersList data={targetChatId} />
