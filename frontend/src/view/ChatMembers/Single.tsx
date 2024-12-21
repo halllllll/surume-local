@@ -33,7 +33,7 @@ export const SingleView: FC = () => {
 		remove();
 		if (surumeCtx.chat_list_result === null) return;
 
-		const values = surumeCtx.chat_list_result.result.map((res, idx) => {
+		const values = surumeCtx.chat_list_result.result.map((res, _idx) => {
 			return {
 				chatId: res.id ?? "",
 				chatName: res.topic ?? "",

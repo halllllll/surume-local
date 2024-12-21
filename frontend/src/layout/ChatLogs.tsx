@@ -41,7 +41,7 @@ export const ChatLogs: FC = () => {
 										type={"date"}
 									/>
 									<FormErrorMessage>
-										{methods.formState.errors.dateFrom?.message ?? "a"}
+										{methods.formState.errors.dateFrom?.message ?? ""}
 									</FormErrorMessage>
 								</FormControl>
 								<FormControl isInvalid={!!methods.formState.errors.dateTo}>

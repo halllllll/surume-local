@@ -7,7 +7,7 @@ tmp_dir = "tmp"
   bin = "./tmp/go-vite"
   cmd = "go build -o ./tmp/go-vite ."
   delay = 0
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "frontend"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata", "frontend", "bin"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
@@ -36,6 +36,11 @@ tmp_dir = "tmp"
 
 [misc]
   clean_on_exit = false
+
+[proxy]
+  app_port = 0
+  enabled = false
+  proxy_port = 0
 
 [screen]
   clear_on_rebuild = false

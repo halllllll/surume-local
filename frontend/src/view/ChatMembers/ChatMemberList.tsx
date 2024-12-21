@@ -18,16 +18,10 @@ import { Members } from "./List";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
 
-// each download (NOT merge one excel file)
-const save = async ({
+const fillWorksheetWithData = ({
+	worksheet,
 	data,
-	name: sheetName,
-}: { data: ChatMemberData[]; name: string }) => {
-	console.info("わたってくるデータがどんな形をしている？");
-	console.dir(data);
-	const workbook = new Excel.Workbook();
-	workbook.created = new Date();
-	const worksheet = workbook.addWorksheet(sheetName);
+}: { worksheet: Excel.Worksheet; data: ChatMemberData[] }) => {
 	worksheet.columns = [
 		{ header: "id", key: "id" },
 		{ header: "username", key: "username" },
@@ -43,9 +37,48 @@ const save = async ({
 			since: v.visibleHistoryStartDateTime, // TODO: レスポンスのJSOMをみても`"0001-01-01T00:00:00Z"`とかになってて全然嬉しそうなデータじゃない
 		});
 	}
+};
+// each download
+const save = async ({
+	data,
+	sheetName, // あとから全部DLを追加したのでその場合は命名がおかしいが一旦気にしないことにしてほしい
+	fileName,
+}:
+	| { data: ChatMemberData[]; sheetName: string; fileName?: undefined }
+	| {
+			// これがあとから追加したやつ　データ構造が雑
+			data: Map<string, ChatMemberData[]>;
+			sheetName: { chatid: string; outputName: string }[];
+			fileName: string;
+	  }) => {
+	const workbook = new Excel.Workbook();
+	workbook.created = new Date();
+	let _outputFileName: string;
+	if (fileName === undefined) {
+		_outputFileName = `chatmembers-${sheetName}.xlsx`;
+		const worksheet = workbook.addWorksheet(sheetName);
 
+		fillWorksheetWithData({ worksheet, data });
+	} else {
+		_outputFileName = fileName;
+		if (data.size !== new Set(sheetName).size) {
+			throw new Error(
+				"invalid data - not same size each chatMember and sheet names data",
+			);
+		}
+		for (const { chatid, outputName } of sheetName) {
+			const dd = data.get(chatid);
+			if (!dd) {
+				console.info(`not found data of ${outputName}`);
+				continue;
+			}
+			const worksheet = workbook.addWorksheet(outputName);
+
+			fillWorksheetWithData({ worksheet, data: dd });
+		}
+	}
 	const buffer = await workbook.xlsx.writeBuffer();
-	saveAs(new Blob([buffer]), `chatmembers-${sheetName}.xlsx`);
+	saveAs(new Blob([buffer]), _outputFileName);
 };
 
 export const ChatMembersList: FC<{
@@ -66,19 +99,22 @@ export const ChatMembersList: FC<{
 		});
 	};
 
-	// TODO:
-	const saveAll = () => {
-		console.log(console.dir(chatMembers));
-	};
-
 	return (
 		<>
 			<Flex my={2} gap={4}>
 				<Heading>Result</Heading>
 				<Spacer />
 				<Button
-					onClick={() => saveAll()}
-				>{`TODO: Download All ( ${data.chatMembers.length} each files)`}</Button>
+					onClick={() =>
+						save({
+							data: chatMembers,
+							sheetName: data.chatMembers.map((d) => {
+								return { chatid: d.chatId, outputName: d.outputName };
+							}),
+							fileName: "allchatmembers.xlsx",
+						})
+					}
+				>{`Download All ( ${data.chatMembers.length} worksheets)`}</Button>
 				<Spacer />
 			</Flex>
 
@@ -104,7 +140,7 @@ export const ChatMembersList: FC<{
 												// isDisabled={!chatMembers.get(d.chatId)}
 												onClick={() => {
 													const dd = chatMembers.get(d.chatId);
-													if (dd) save({ data: dd, name: d.outputName });
+													if (dd) save({ data: dd, sheetName: d.outputName });
 												}}
 											>
 												{`Download (${d.outputName})`}
