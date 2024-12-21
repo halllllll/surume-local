@@ -40,8 +40,7 @@ export const SingleView: FC = () => {
 				outputName: res.topic ?? res.id ?? "",
 			};
 		});
-		// ちょっとテストで絞ってる
-		replace(values.splice(0, 4));
+		replace(values);
 		methods.trigger();
 	};
 
@@ -59,7 +58,7 @@ export const SingleView: FC = () => {
 					reset
 				</Button>
 
-				{(surumeCtx.chat_list_result && !isTriggered) ?? (
+				{!!surumeCtx.chat_list_result && !isTriggered && (
 					<>
 						<Spacer />
 						<Center>

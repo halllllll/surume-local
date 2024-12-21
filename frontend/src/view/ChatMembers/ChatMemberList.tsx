@@ -62,6 +62,9 @@ const save = async ({
 	} else {
 		_outputFileName = fileName;
 		if (data.size !== new Set(sheetName).size) {
+			console.info(data);
+			console.info(sheetName);
+			// TODO: 画面になんも表示されないのであとでなんとかする
 			throw new Error(
 				"invalid data - not same size each chatMember and sheet names data",
 			);
@@ -107,7 +110,13 @@ export const ChatMembersList: FC<{
 				<Button
 					onClick={() =>
 						save({
-							data: chatMembers,
+							data: data.chatMembers.reduce((acc, cur) => {
+								const dd = chatMembers.get(cur.chatId);
+								if (dd) {
+									acc.set(cur.chatId, dd);
+								}
+								return acc;
+							}, new Map<string, ChatMemberData[]>()),
 							sheetName: data.chatMembers.map((d) => {
 								return { chatid: d.chatId, outputName: d.outputName };
 							}),
