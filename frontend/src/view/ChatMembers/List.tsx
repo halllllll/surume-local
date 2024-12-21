@@ -14,12 +14,19 @@ export const Members: FC<{
 	}) => void;
 }> = ({ chatId, setResult }) => {
 	if (!chatId) return null;
-	const { data, hasNextPage, fetchNextPage, isPending, isFetching, error } =
-		useGetChatMembers({
-			chatId: chatId,
-			outputName: "",
-			nextLink: undefined,
-		});
+	const {
+		data,
+		hasNextPage,
+		fetchNextPage,
+		isPending,
+		isFetching,
+		error,
+		isError,
+	} = useGetChatMembers({
+		chatId: chatId,
+		outputName: "",
+		nextLink: undefined,
+	});
 	if (isPending) return <>{"fetching members.."}</>;
 	if (error) {
 		return (
@@ -54,12 +61,15 @@ export const Members: FC<{
 		// if (isFetching || isPending || hasNextPage) {
 		// 	return;
 		// }
-		if (!isFetching && !isPending && !hasNextPage) {
+		if (isError) {
+			console.warn("エラー出てんじゃん！！！！！");
+			console.log(error);
+		} else if (!isError && !isFetching && !isPending && !hasNextPage) {
 			setResult({ id: chatId, members: correctData });
 		}
 		// return () => setResult({ id: chatId, members: correctData });
 		return;
-	}, [isFetching, isPending, hasNextPage, chatId, setResult]);
+	}, [isFetching, isPending, hasNextPage, chatId, setResult, isError, error]);
 
 	return (
 		<VStack>
