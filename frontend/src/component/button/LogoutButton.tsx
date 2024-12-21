@@ -1,10 +1,13 @@
+import { useSurumeContext } from "@/hooks/context";
 import { useMsal } from "@azure/msal-react";
 import { MinusIcon } from "@chakra-ui/icons";
 import { Button, MenuItem } from "@chakra-ui/react";
 
 export const LogoutButton = () => {
+	const { setSurumeCtx } = useSurumeContext();
 	const { instance } = useMsal();
 	const handleLogout = async () => {
+		setSurumeCtx({ type: "ResetBelongingChat" });
 		instance
 			.logoutPopup({
 				mainWindowRedirectUri: "/",

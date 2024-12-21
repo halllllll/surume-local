@@ -1,10 +1,11 @@
 import { useSurumeContext } from "@/hooks/context";
-import { Stack, Input, Button, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import type { FC } from "react";
 import { useTemplateValidate } from "@/service/fileupload";
 import type { FormatedChatMessageData } from "@/types/types";
 import { useMsal } from "@azure/msal-react";
 import { getAccessToken } from "@/service/graphClient";
+import { ValidateXlsx } from "./ValidateChatmemberXlsx";
 
 export const UploadXlsxFile: FC = () => {
 	const { mutate: uploadFileMutate, isPending: disabled } =
@@ -71,24 +72,9 @@ export const UploadXlsxFile: FC = () => {
 	};
 
 	return (
-		<Stack direction="row" spacing={4} align="center">
-			<Input
-				type="file"
-				hidden // input要素を非表示にする
-				id="surumeXlsxTemplateUpload"
-				onChange={handleFileChange}
-				accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-			/>
-			<Button
-				as="label"
-				htmlFor="surumeXlsxTemplateUpload"
-				variant="solid"
-				colorScheme="teal"
-				isDisabled={disabled ?? false}
-				isLoading={disabled}
-			>
-				Upload Chats File
-			</Button>
-		</Stack>
+		<ValidateXlsx
+			inputFileChangeHandle={handleFileChange}
+			isDisabled={disabled}
+		/>
 	);
 };

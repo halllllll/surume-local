@@ -107,7 +107,8 @@ paths:
       summary: validation template xlsx file for chats
       description: |
         validation template xlsx file for chats <br>
-      tags: [System, Chat]
+      tags:
+        - Teams
       operationId: Validate Template
       deprecated: false
       requestBody:
@@ -288,6 +289,10 @@ components:
                 type: string
               type:
                 type: string
+            required:
+              - xlsx
+              - target
+              - type
 
   responses:
     DeleteTargetResponse:
