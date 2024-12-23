@@ -109,6 +109,7 @@ export const useGetChatLogsPagenate = (props: ChatLogsParam) => {
 		isFetching,
 		isLoading,
 		error,
+		isSuccess,
 	} = useSuspenseInfiniteQuery({
 		// ここはキャストしない（TPageParamがunkownになる）
 		networkMode: "offlineFirst",
@@ -122,7 +123,7 @@ export const useGetChatLogsPagenate = (props: ChatLogsParam) => {
 
 		retryOnMount: true,
 		retryDelay: (attempt) =>
-			Math.min(attempt > 1 ? 2 ** attempt * 1000 : 1000, 30 * 1000), // TODO: defaultだと不要らしいのであとで消す
+			Math.min(attempt > 1 ? 2 ** attempt * 1000 : 1000, 30 * 1000),
 		queryKey: chatKeys.logs(props),
 		queryFn: ({ pageParam }) => {
 			return getChatData(pageParam);
@@ -145,5 +146,6 @@ export const useGetChatLogsPagenate = (props: ChatLogsParam) => {
 		fetchNextPage,
 		isError,
 		error,
+		isSuccess,
 	};
 };

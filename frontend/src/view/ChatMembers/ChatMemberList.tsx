@@ -9,7 +9,6 @@ import {
 	Heading,
 	Flex,
 	Spacer,
-	useToast,
 } from "@chakra-ui/react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 
