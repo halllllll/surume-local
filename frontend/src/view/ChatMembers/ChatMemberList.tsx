@@ -54,31 +54,38 @@ const save = async ({
 	const workbook = new Excel.Workbook();
 	workbook.created = new Date();
 	let _outputFileName: string;
-	if (fileName === undefined) {
-		_outputFileName = `chatmembers-${sheetName}.xlsx`;
-		const worksheet = workbook.addWorksheet(sheetName);
+	try {
+		if (fileName === undefined) {
+			_outputFileName = `chatmembers-${sheetName}.xlsx`;
+			const worksheet = workbook.addWorksheet(sheetName);
 
-		fillWorksheetWithData({ worksheet, data });
-	} else {
-		_outputFileName = fileName;
-		if (data.size !== new Set(sheetName).size) {
-			throw new Error(
-				"invalid data - not same size each chatMember and sheet names data",
-			);
-		}
-		for (const { chatid, outputName } of sheetName) {
-			const dd = data.get(chatid);
-			if (!dd) {
-				console.info(`not found data of ${outputName}`);
-				continue;
+			fillWorksheetWithData({ worksheet, data });
+		} else {
+			_outputFileName = fileName;
+			if (data.size !== new Set(sheetName).size) {
+				// TODO: 画面になんも表示されないのであとでなんとかする
+				throw new Error(
+					"invalid data - not same size each chatMember and sheet names data",
+				);
 			}
-			const worksheet = workbook.addWorksheet(outputName);
+			for (const { chatid, outputName } of sheetName) {
+				const dd = data.get(chatid);
+				if (!dd) {
+					console.info(`not found data of ${outputName}`);
+					continue;
+				}
+				const worksheet = workbook.addWorksheet(outputName);
 
-			fillWorksheetWithData({ worksheet, data: dd });
+				fillWorksheetWithData({ worksheet, data: dd });
+			}
 		}
+		const buffer = await workbook.xlsx.writeBuffer();
+		saveAs(new Blob([buffer]), _outputFileName);
+	} catch (e) {
+		// TODO: なんも画面に表示されないのでなんかしたい
+		const err = e as unknown as Error;
+		throw err;
 	}
-	const buffer = await workbook.xlsx.writeBuffer();
-	saveAs(new Blob([buffer]), _outputFileName);
 };
 
 export const ChatMembersList: FC<{
@@ -105,16 +112,31 @@ export const ChatMembersList: FC<{
 				<Heading>Result</Heading>
 				<Spacer />
 				<Button
-					onClick={() =>
-						save({
-							data: chatMembers,
-							sheetName: data.chatMembers.map((d) => {
+					onClick={() => {
+						const _gotData = data.chatMembers.reduce((acc, cur) => {
+							const dd = chatMembers.get(cur.chatId);
+							if (dd) {
+								acc.set(cur.chatId, dd);
+							}
+							return acc;
+						}, new Map<string, ChatMemberData[]>());
+						// console.log(_gotData);
+
+						const sheetName = data.chatMembers
+							.filter((d) => {
+								return !!_gotData.get(d.chatId);
+							})
+							.map((d) => {
 								return { chatid: d.chatId, outputName: d.outputName };
-							}),
+							});
+						// console.log(sheetName);
+						save({
+							data: _gotData,
+							sheetName,
 							fileName: "allchatmembers.xlsx",
-						})
-					}
-				>{`Download All ( ${data.chatMembers.length} worksheets)`}</Button>
+						});
+					}}
+				>{`Download All ( ${chatMembers.size} SUCCESSED worksheets)`}</Button>
 				<Spacer />
 			</Flex>
 

@@ -1,4 +1,9 @@
-import { useChatLogForm } from "@/scheme/chatLogs";
+import { DownloadTemplateXlsxButton } from "@/component/button/DL/DownloadTemplateXlsx";
+import { UploadChatLogButton } from "@/component/button/UploadChatLogButton";
+import {
+	useChatLogForm,
+	useValidatationChatlogTemplate,
+} from "@/scheme/chatLogs";
 import { ChatLogList } from "@/view/ChatLogList";
 
 import {
@@ -11,14 +16,38 @@ import {
 	FormLabel,
 	Heading,
 	Input,
+	Text,
 	HStack,
 	Spacer,
 } from "@chakra-ui/react";
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 import { FormProvider } from "react-hook-form";
 
 export const ChatLogs: FC = () => {
-	const { methods, onSubmit, fields, isTriggered, logData } = useChatLogForm();
+	const {
+		methods,
+		onSubmit,
+		fields,
+		remove,
+		replace,
+		isTriggered,
+		setIsTriggered,
+		logData,
+	} = useChatLogForm();
+	const { targetChatlog, handleFileChange } = useValidatationChatlogTemplate();
+
+	useEffect(() => {
+		if (targetChatlog.length === 0) return;
+		console.log(targetChatlog);
+		methods.reset({
+			dateFrom: methods.getValues().dateFrom,
+			dateTo: methods.getValues().dateTo,
+			chats: [],
+		});
+		remove();
+		replace(targetChatlog);
+		methods.trigger();
+	}, [targetChatlog, methods, remove, replace]);
 
 	const chatErrors = methods.formState.errors.chats;
 	return (
@@ -57,7 +86,19 @@ export const ChatLogs: FC = () => {
 									</FormErrorMessage>
 								</FormControl>
 							</HStack>
-
+							<HStack align={"center"} justify={"end"} gap={8} mb={10}>
+								<UploadChatLogButton
+									text="take batching"
+									handler={handleFileChange}
+								/>
+								<DownloadTemplateXlsxButton
+									text="download batch file template"
+									path={"/static/surume-chatlog.xlsx"}
+								/>
+							</HStack>
+							<Box>
+								<Text>{`target chat count: ${fields.length}`}</Text>
+							</Box>
 							{fields.map((chat, idx) => {
 								return (
 									<Box key={chat.id}>
@@ -88,6 +129,18 @@ export const ChatLogs: FC = () => {
 							})}
 
 							<Flex alignItems={"end"}>
+								<Button
+									type={"button"}
+									my={2}
+									p={4}
+									onClick={() => {
+										methods.reset();
+										setIsTriggered(false);
+									}}
+								>
+									reset
+								</Button>
+
 								<Spacer />
 								<Button
 									type={"submit"}

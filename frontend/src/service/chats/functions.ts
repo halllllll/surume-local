@@ -81,7 +81,8 @@ export const getChatData = async (
 
 		const from = formatISO(p.dateFrom);
 		const to = formatISO(subMilliseconds(p.dateTo, 1));
-
+		// ちょっと手心
+		// await new Promise((result) => setTimeout(result, Math.random() * 2000)); // やったらエラーになる....
 		const res = await client.GET("/me/chats/{chat-id}/messages", {
 			params: {
 				path: {
