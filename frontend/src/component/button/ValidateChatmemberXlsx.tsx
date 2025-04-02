@@ -18,7 +18,7 @@ export const ValidateXlsx: FC<{
 				type="file"
 				hidden // ファイルアップロードのためにinput要素を非表示にする
 				id="surumeXlsxTemplateUpload"
-				onChange={() => inputFileChangeHandle}
+				onChange={inputFileChangeHandle}
 				accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
 			/>
 			<Button
